@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-	<meta name="generator" content="Hugo 0.19" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="HandheldFriendly" content="True">
@@ -20,10 +19,10 @@
     <title>
       
       
-         That&#39;s weird... 
+         Running your Django tests in memory with PostgreSQL 
       
     </title>
-    <link rel="canonical" href="https://mpessas.github.io/">
+    <link rel="canonical" href="https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/">
 
     <style>
   * {
@@ -379,8 +378,6 @@
 
 
     
-      <link href="https://mpessas.github.io/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
-    
   </head>
 
   <body>
@@ -395,48 +392,64 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Running your Django tests in memory with PostgreSQL </h1>
+
+  <div id=sub-header>
+    October 2013 · 2 minute read
+  </div>
+
+  <div class="entry-content">
+    <p>Many people advise to use sqlite for running your tests in django. The reason is
+that Django will automatically create the database <a href="http://www.sqlite.org/inmemorydb.html">in-memory</a>, which speeds up
+any tests that query the database.</p>
+
+<p>However, this means that your test database is different than your production
+one, which might cause issues because of the differences between the databases,
+such as how they handle transactions. Besides, you might be using
+<a href="https://github.com/mpessas/django-pg-extensions">features of PostgreSQL</a> that sqlite does not support.</p>
+
+<p>There are ways to make <a href="http://mpessas.tumblr.com/post/15402128609/testing-with-postgresql">PostgreSQL much faster for running your tests</a>, but
+why not run your database in-memory as well and avoid any I/O operations?</p>
+
+<p>This is possible in linux by using a ramdisk for your test database.</p>
+
+<p>First, you need to create the ramdisk:</p>
+
+<pre><code>sudo mount -t ramfs none /mnt/
+sudo mkdir /mnt/pgdata/
+sudo chown postgres:postgres /mnt/pgdata/
+</code></pre>
+
+<p>Then, you need to create a <a href="http://www.postgresql.org/docs/9.2/static/manage-ag-tablespaces.html">tablespace</a> that uses the ramdisk:</p>
+
+<pre><code>psql -d postgres -c &quot;CREATE TABLESPACE ramfs LOCATION '/mnt/pgdata'&quot;
+</code></pre>
+
+<p>The last step is to instruct django to use this tablespace for the test
+database. This can be done by adding the following to your settings:</p>
+
+<pre><code>if 'test' in sys.argv:
+    DEFAULT_TABLESPACE = 'ramfs'
+</code></pre>
+
+<p>This will help reducing the running time of your test suite a bit more.</p>
+
+<p>Keep in mind you might have to drop the tablespace and re-create it after a
+reboot.</p>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-env-files/">Using .env files</a></h2>
-        <div id=date>
-          <time>August 2016</time>
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/django-forms-models-and-dry/">Django, forms, models and DRY</a></h2>
-        <div id=date>
-          <time>November 2014</time>
-        </div>
-      </li>
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/using-gettext-in-django/">Using gettext in Django &raquo;</a>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/exposing-objects-in-multiple-represenations/">Exposing objects in multiple represenations</a></h2>
-        <div id=date>
-          <time>February 2014</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-gettext-in-django/">Using gettext in Django</a></h2>
-        <div id=date>
-          <time>November 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/">Running your Django tests in memory with PostgreSQL</a></h2>
-        <div id=date>
-          <time>October 2013</time>
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 

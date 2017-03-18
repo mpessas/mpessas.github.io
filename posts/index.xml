@@ -413,5 +413,51 @@ all indentation should be avoided.&lt;/p&gt;
 </description>
     </item>
     
+    <item>
+      <title>Running your Django tests in memory with PostgreSQL</title>
+      <link>https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/</link>
+      <pubDate>Sat, 19 Oct 2013 11:22:45 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/</guid>
+      <description>&lt;p&gt;Many people advise to use sqlite for running your tests in django. The reason is
+that Django will automatically create the database &lt;a href=&#34;http://www.sqlite.org/inmemorydb.html&#34;&gt;in-memory&lt;/a&gt;, which speeds up
+any tests that query the database.&lt;/p&gt;
+
+&lt;p&gt;However, this means that your test database is different than your production
+one, which might cause issues because of the differences between the databases,
+such as how they handle transactions. Besides, you might be using
+&lt;a href=&#34;https://github.com/mpessas/django-pg-extensions&#34;&gt;features of PostgreSQL&lt;/a&gt; that sqlite does not support.&lt;/p&gt;
+
+&lt;p&gt;There are ways to make &lt;a href=&#34;http://mpessas.tumblr.com/post/15402128609/testing-with-postgresql&#34;&gt;PostgreSQL much faster for running your tests&lt;/a&gt;, but
+why not run your database in-memory as well and avoid any I/O operations?&lt;/p&gt;
+
+&lt;p&gt;This is possible in linux by using a ramdisk for your test database.&lt;/p&gt;
+
+&lt;p&gt;First, you need to create the ramdisk:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo mount -t ramfs none /mnt/
+sudo mkdir /mnt/pgdata/
+sudo chown postgres:postgres /mnt/pgdata/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, you need to create a &lt;a href=&#34;http://www.postgresql.org/docs/9.2/static/manage-ag-tablespaces.html&#34;&gt;tablespace&lt;/a&gt; that uses the ramdisk:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;psql -d postgres -c &amp;quot;CREATE TABLESPACE ramfs LOCATION &#39;/mnt/pgdata&#39;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The last step is to instruct django to use this tablespace for the test
+database. This can be done by adding the following to your settings:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if &#39;test&#39; in sys.argv:
+    DEFAULT_TABLESPACE = &#39;ramfs&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will help reducing the running time of your test suite a bit more.&lt;/p&gt;
+
+&lt;p&gt;Keep in mind you might have to drop the tablespace and re-create it after a
+reboot.&lt;/p&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
