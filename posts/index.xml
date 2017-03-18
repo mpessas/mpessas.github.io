@@ -820,5 +820,19 @@ Keep also in mind that you will probably need to increase the maximum size of a 
 </description>
     </item>
     
+    <item>
+      <title>Russ Cox&#39;s articles on regular expressions</title>
+      <link>https://mpessas.github.io/posts/russ-cox-regular-expressions/</link>
+      <pubDate>Mon, 26 Dec 2011 11:33:09 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/russ-cox-regular-expressions/</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://swtch.com/~rsc/regexp/regexp1.html&#34;&gt;http://swtch.com/~rsc/regexp/regexp1.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://swtch.com/~rsc/regexp/regexp2.html&#34;&gt;http://swtch.com/~rsc/regexp/regexp2.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://swtch.com/~rsc/regexp/regexp3.html&#34;&gt;http://swtch.com/~rsc/regexp/regexp3.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
