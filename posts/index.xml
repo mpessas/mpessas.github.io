@@ -795,5 +795,30 @@ Keep also in mind that you will probably need to increase the maximum size of a 
 </description>
     </item>
     
+    <item>
+      <title>TimedRotatingFileHandler</title>
+      <link>https://mpessas.github.io/posts/timedrotatingfilehandler/</link>
+      <pubDate>Tue, 27 Dec 2011 11:31:39 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/timedrotatingfilehandler/</guid>
+      <description>&lt;p&gt;&lt;span class=&#34;comment&#34;&gt;(For future reference.)&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://docs.python.org/library/logging.handlers.html#timedrotatingfilehandler&#34;&gt;&lt;code&gt;TimedRotatingFileHandler&lt;/code&gt;&lt;/a&gt; logs messages to a file and rotates it based on time values.&lt;/p&gt;
+
+&lt;p&gt;Among the arguments it accepts is the &lt;code&gt;when&lt;/code&gt; argument, which specifies the type of interval. One of the possible values is &lt;code&gt;&#39;W&#39;&lt;/code&gt;, which specifies that the rollover should be done on a specific day of the week (with &lt;code&gt;0&lt;/code&gt; being Monday). The day is specified by appending the necessary number (&lt;code&gt;[0-6]&lt;/code&gt;) to &lt;code&gt;when&lt;/code&gt;, like &lt;code&gt;W0&lt;/code&gt; for rotating the logs on Mondays.&lt;/p&gt;
+
+&lt;p&gt;The relevant code from logging.handler:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;elif self.when.startswith(&#39;W&#39;):
+    self.interval = 60 * 60 * 24 * 7 # one week
+    if len(self.when) != 2:
+        raise ValueError(...)
+    if self.when[1]  &#39;6&#39;:
+        raise ValueError(...)
+    self.dayOfWeek = int(self.when[1])
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
