@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <base href="https://mpessas.github.io/">
+    
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400' rel='stylesheet' type='text/css'>
+
+    <link rel="icon" type="image/png" href="https://mpessas.github.io/favicon_16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://mpessas.github.io/favicon_32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://mpessas.github.io/favicon_128x128.png" sizes="128x128">
+
+    <title>
+      
+      
+         Exposing objects in multiple represenations 
+      
+    </title>
+    <link rel="canonical" href="https://mpessas.github.io/posts/exposing-objects-in-multiple-represenations/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+  }
+
+  body {
+    font-family:'Open Sans', 'Myriad Pro', Myriad, sans-serif;
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, time {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content time {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(2) {
+    float:right;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+</style>
+
+
+    
+  </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://mpessas.github.io/">That&#39;s weird...</a></h1>
+      <ul>
+        
+          <li><a href="https://github.com/mpessas/">Github</a></li>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Exposing objects in multiple represenations </h1>
+
+  <div id=sub-header>
+    February 2014 · 4 minute read
+  </div>
+
+  <div class="entry-content">
+    
+
+<h2 id="the-need-for-multiple-representations">The need for multiple representations</h2>
+
+<p>Many applications have multiple interfaces: an API that others use to access the
+application programmatically or a rich web client built with JavaScript for the
+end-users and so on.</p>
+
+<p>The needs of each interface may be different, though. The API, for
+instance, may need to expose all details of a specific object, but the web
+interface only needs certain details and maybe some extra attributes.</p>
+
+<p>This means that the objects living in the business core need to be exposed to
+multiple clients in different ways. How can you achieve this efficiently?</p>
+
+<p>The following examples will use Django, but the same principles apply in
+general.</p>
+
+<p>We will also use a <code>User</code> object as an example:</p>
+
+<pre><code>class User(object):
+
+    def __init__(self, username, password, email, firstname, lastname):
+        self.username = username
+        self.password = password
+        self.email = email
+        self.firstname = firstname
+        self.lastname = lastname
+</code></pre>
+
+<p>This is not a Django model, since you can also have plain python classes for
+your business logic.</p>
+
+<h2 id="solutions-that-don-t-scale-putting-the-code-in-the-view">Solutions that don&rsquo;t scale: Putting the code in the view</h2>
+
+<p>The first thing that usually comes to mind is to do the necessary transformation
+in the view that exposes the object.</p>
+
+<pre><code>import json
+from django.http import HttpResponse
+
+def user_details(request, username):
+    # Fetch the user from the database.
+    user = fetch_user(username=username)
+    user_dict = {}
+    for attr in [username, email, firstname, lastname]:
+        user_dict[attr] = getattr(user, attr)
+    return HttpResponse(
+        json.dumps(user_dict), content_type=&quot;application/json&quot;
+    )
+</code></pre>
+
+<p>A similar approach would be followed in the API views as well.</p>
+
+<p>This approach leads, however, to <strong>duplicated code</strong>: every time you need to
+serialize a <code>User</code> object you need to follow the exactly same process and have
+the exactly same code.</p>
+
+<p>Until you don&rsquo;t; a use-case will come up where you need a different
+representation. As an example, you might need in a view to expose the number of
+photos a <code>User</code> might have as well:</p>
+
+<pre><code>def user_details_with_photos(request, username):
+    # Fetch the user from the database.
+    user = fetch_user(username=username)
+    user_dict = {}
+    for attr in [username, email, firstname, lastname]:
+        user_dict[attr] = getattr(user, attr)
+    user_dict[&quot;nphotos&quot;] = user.nphotos()
+    return HttpResponse(
+        json.dumps(user_dict), content_type=&quot;application/json&quot;
+    )
+</code></pre>
+
+<p>which is the same code as before with just one extra line.</p>
+
+<p>As a result, the next time you have to change something, you have to make the
+change in many places, hoping you do not forget one, making this approach
+<strong>error-prone</strong>.</p>
+
+<p>These are all well-known drawbacks of putting logic in the views.</p>
+
+<h2 id="solutions-that-don-t-scale-putting-the-code-in-the-object">Solutions that don&rsquo;t scale: Putting the code in the object</h2>
+
+<p>The next approach is to create a <strong>fat model</strong> and keep the view <strong>skinny</strong>.
+That is, we move the code that generates the representation of the <code>User</code> object
+in the <code>User</code> class itself:</p>
+
+<pre><code>class User(object):
+    ...
+
+    def to_dict(self):
+        result = {}
+        for attr in [username, email, firstname, lastname]:
+            result[attr] = getattr(self, attr)
+        return result
+
+    def to_dict_with_photos(self):
+        result = self.to_dict()
+        result[&quot;nphotos&quot;] = user.nphotos()
+        return result
+</code></pre>
+
+<p>The corresponding views become:</p>
+
+<pre><code>def user_details(request, username):
+    user = fetch_user(username=username)
+    return HttpResponse(
+        json.dumps(user.to_dict()),
+        content_type=&quot;application/json&quot;
+    )
+
+
+def user_details_with_photos(request, username):
+    user = fetch_user(username=username)
+    return HttpResponse(
+        json.dumps(user.to_dict_with_photos()),
+        content_type=&quot;application/json&quot;
+    )
+</code></pre>
+
+<p>This solves the problem of <strong>code reuse</strong> nicely. Every way to represent the
+<code>User</code> object is in one place, in the <code>User</code> class, and the code in the views
+becomes simpler. Furthermore, tests become much simpler to write: you need to
+test the two methods that convert a <code>User</code> object to a dictionary, instead of
+testing the views directly. Thus, the tests become faster as well,since they do
+not have to go through the HTTP stack.</p>
+
+<p>However, the <code>User</code> class has become quite large this way. In addition to the
+functionality it must support for a user instance, the class also has many
+methods to generate all necessary transformations.</p>
+
+<p>In other words, this approach violates the
+<a href="http://en.wikipedia.org/wiki/Single_responsibility_principle"><strong>Single Responsibility Principle</strong></a>. The <code>User</code> class has two
+responsibilities, one to support the necessary functionality of a <code>User</code> object
+and one to represent the object in multiple ways. The <code>User</code> class becomes this
+way harder to understand and more fragile.</p>
+
+<h2 id="moving-the-logic-for-the-representations-to-separate-processes">Moving the logic for the representations to separate processes</h2>
+
+<p>The solution to this problem is to extract the responsibility of generating a
+representation of a <code>User</code> instance to a separate function or class.</p>
+
+<pre><code>class UserRepresentations(object):
+
+    @classmethod
+    def to_dict(cls, user):
+        result = {}
+        for attr in [username, email, firstname, lastname]:
+            result[attr] = getattr(user, attr)
+        return result
+
+    @classmethod
+    def to_dict_with_photos(cls, user):
+        result = cls.to_dict(user)
+        result[&quot;nphotos&quot;] = user.nphotos()
+        return result
+</code></pre>
+
+<p>As an added benefit, these representations can be unit-tested in isolation,
+without any dependency on the business objects (and perhaps the database).</p>
+
+<p>The views now become:</p>
+
+<pre><code>def user_details(request, username):
+    user = fetch_user(username=username)
+    user_dict = UserRepresentations.to_dict(user)
+    return HttpResponse(
+        json.dumps(user_dict), content_type=&quot;application/json&quot;
+    )
+
+
+def user_details_with_photos(request, username):
+    user = fetch_user(username=username)
+    user_dict = UserRepresentations.to_dict_with_photos(user)
+    return HttpResponse(
+        json.dumps(user_dict), content_type=&quot;application/json&quot;
+    )
+</code></pre>
+
+<p>The result is a clear separation of concerns; that is, a cleaner codebase and of
+higher quality.</p>
+
+  </div>
+
+  <div id=links>
+    
+    
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/django-forms-models-and-dry/">Django, forms, models and DRY &raquo;</a>
+    
+  </div>
+</section>
+
+  
+</body>
+</html>
+
+
+

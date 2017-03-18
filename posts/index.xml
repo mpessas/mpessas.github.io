@@ -89,5 +89,196 @@ correct type and correct arguments in place, which you can also override.&lt;/p&
 </description>
     </item>
     
+    <item>
+      <title>Exposing objects in multiple represenations</title>
+      <link>https://mpessas.github.io/posts/exposing-objects-in-multiple-represenations/</link>
+      <pubDate>Tue, 11 Feb 2014 11:11:02 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/exposing-objects-in-multiple-represenations/</guid>
+      <description>
+
+&lt;h2 id=&#34;the-need-for-multiple-representations&#34;&gt;The need for multiple representations&lt;/h2&gt;
+
+&lt;p&gt;Many applications have multiple interfaces: an API that others use to access the
+application programmatically or a rich web client built with JavaScript for the
+end-users and so on.&lt;/p&gt;
+
+&lt;p&gt;The needs of each interface may be different, though. The API, for
+instance, may need to expose all details of a specific object, but the web
+interface only needs certain details and maybe some extra attributes.&lt;/p&gt;
+
+&lt;p&gt;This means that the objects living in the business core need to be exposed to
+multiple clients in different ways. How can you achieve this efficiently?&lt;/p&gt;
+
+&lt;p&gt;The following examples will use Django, but the same principles apply in
+general.&lt;/p&gt;
+
+&lt;p&gt;We will also use a &lt;code&gt;User&lt;/code&gt; object as an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class User(object):
+
+    def __init__(self, username, password, email, firstname, lastname):
+        self.username = username
+        self.password = password
+        self.email = email
+        self.firstname = firstname
+        self.lastname = lastname
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is not a Django model, since you can also have plain python classes for
+your business logic.&lt;/p&gt;
+
+&lt;h2 id=&#34;solutions-that-don-t-scale-putting-the-code-in-the-view&#34;&gt;Solutions that don&amp;rsquo;t scale: Putting the code in the view&lt;/h2&gt;
+
+&lt;p&gt;The first thing that usually comes to mind is to do the necessary transformation
+in the view that exposes the object.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import json
+from django.http import HttpResponse
+
+def user_details(request, username):
+    # Fetch the user from the database.
+    user = fetch_user(username=username)
+    user_dict = {}
+    for attr in [username, email, firstname, lastname]:
+        user_dict[attr] = getattr(user, attr)
+    return HttpResponse(
+        json.dumps(user_dict), content_type=&amp;quot;application/json&amp;quot;
+    )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A similar approach would be followed in the API views as well.&lt;/p&gt;
+
+&lt;p&gt;This approach leads, however, to &lt;strong&gt;duplicated code&lt;/strong&gt;: every time you need to
+serialize a &lt;code&gt;User&lt;/code&gt; object you need to follow the exactly same process and have
+the exactly same code.&lt;/p&gt;
+
+&lt;p&gt;Until you don&amp;rsquo;t; a use-case will come up where you need a different
+representation. As an example, you might need in a view to expose the number of
+photos a &lt;code&gt;User&lt;/code&gt; might have as well:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def user_details_with_photos(request, username):
+    # Fetch the user from the database.
+    user = fetch_user(username=username)
+    user_dict = {}
+    for attr in [username, email, firstname, lastname]:
+        user_dict[attr] = getattr(user, attr)
+    user_dict[&amp;quot;nphotos&amp;quot;] = user.nphotos()
+    return HttpResponse(
+        json.dumps(user_dict), content_type=&amp;quot;application/json&amp;quot;
+    )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which is the same code as before with just one extra line.&lt;/p&gt;
+
+&lt;p&gt;As a result, the next time you have to change something, you have to make the
+change in many places, hoping you do not forget one, making this approach
+&lt;strong&gt;error-prone&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;These are all well-known drawbacks of putting logic in the views.&lt;/p&gt;
+
+&lt;h2 id=&#34;solutions-that-don-t-scale-putting-the-code-in-the-object&#34;&gt;Solutions that don&amp;rsquo;t scale: Putting the code in the object&lt;/h2&gt;
+
+&lt;p&gt;The next approach is to create a &lt;strong&gt;fat model&lt;/strong&gt; and keep the view &lt;strong&gt;skinny&lt;/strong&gt;.
+That is, we move the code that generates the representation of the &lt;code&gt;User&lt;/code&gt; object
+in the &lt;code&gt;User&lt;/code&gt; class itself:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class User(object):
+    ...
+
+    def to_dict(self):
+        result = {}
+        for attr in [username, email, firstname, lastname]:
+            result[attr] = getattr(self, attr)
+        return result
+
+    def to_dict_with_photos(self):
+        result = self.to_dict()
+        result[&amp;quot;nphotos&amp;quot;] = user.nphotos()
+        return result
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The corresponding views become:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def user_details(request, username):
+    user = fetch_user(username=username)
+    return HttpResponse(
+        json.dumps(user.to_dict()),
+        content_type=&amp;quot;application/json&amp;quot;
+    )
+
+
+def user_details_with_photos(request, username):
+    user = fetch_user(username=username)
+    return HttpResponse(
+        json.dumps(user.to_dict_with_photos()),
+        content_type=&amp;quot;application/json&amp;quot;
+    )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This solves the problem of &lt;strong&gt;code reuse&lt;/strong&gt; nicely. Every way to represent the
+&lt;code&gt;User&lt;/code&gt; object is in one place, in the &lt;code&gt;User&lt;/code&gt; class, and the code in the views
+becomes simpler. Furthermore, tests become much simpler to write: you need to
+test the two methods that convert a &lt;code&gt;User&lt;/code&gt; object to a dictionary, instead of
+testing the views directly. Thus, the tests become faster as well,since they do
+not have to go through the HTTP stack.&lt;/p&gt;
+
+&lt;p&gt;However, the &lt;code&gt;User&lt;/code&gt; class has become quite large this way. In addition to the
+functionality it must support for a user instance, the class also has many
+methods to generate all necessary transformations.&lt;/p&gt;
+
+&lt;p&gt;In other words, this approach violates the
+&lt;a href=&#34;http://en.wikipedia.org/wiki/Single_responsibility_principle&#34;&gt;&lt;strong&gt;Single Responsibility Principle&lt;/strong&gt;&lt;/a&gt;. The &lt;code&gt;User&lt;/code&gt; class has two
+responsibilities, one to support the necessary functionality of a &lt;code&gt;User&lt;/code&gt; object
+and one to represent the object in multiple ways. The &lt;code&gt;User&lt;/code&gt; class becomes this
+way harder to understand and more fragile.&lt;/p&gt;
+
+&lt;h2 id=&#34;moving-the-logic-for-the-representations-to-separate-processes&#34;&gt;Moving the logic for the representations to separate processes&lt;/h2&gt;
+
+&lt;p&gt;The solution to this problem is to extract the responsibility of generating a
+representation of a &lt;code&gt;User&lt;/code&gt; instance to a separate function or class.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class UserRepresentations(object):
+
+    @classmethod
+    def to_dict(cls, user):
+        result = {}
+        for attr in [username, email, firstname, lastname]:
+            result[attr] = getattr(user, attr)
+        return result
+
+    @classmethod
+    def to_dict_with_photos(cls, user):
+        result = cls.to_dict(user)
+        result[&amp;quot;nphotos&amp;quot;] = user.nphotos()
+        return result
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As an added benefit, these representations can be unit-tested in isolation,
+without any dependency on the business objects (and perhaps the database).&lt;/p&gt;
+
+&lt;p&gt;The views now become:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def user_details(request, username):
+    user = fetch_user(username=username)
+    user_dict = UserRepresentations.to_dict(user)
+    return HttpResponse(
+        json.dumps(user_dict), content_type=&amp;quot;application/json&amp;quot;
+    )
+
+
+def user_details_with_photos(request, username):
+    user = fetch_user(username=username)
+    user_dict = UserRepresentations.to_dict_with_photos(user)
+    return HttpResponse(
+        json.dumps(user_dict), content_type=&amp;quot;application/json&amp;quot;
+    )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The result is a clear separation of concerns; that is, a cleaner codebase and of
+higher quality.&lt;/p&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
