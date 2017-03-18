@@ -19,10 +19,10 @@
     <title>
       
       
-         On database and code changes 
+         On database schema changes 
       
     </title>
-    <link rel="canonical" href="https://mpessas.github.io/posts/on-database-and-code-changes/">
+    <link rel="canonical" href="https://mpessas.github.io/posts/on-database-schema-changes/">
 
     <style>
   * {
@@ -392,57 +392,40 @@
 
 
 <section id=content>
-  <h1> On database and code changes </h1>
+  <h1> On database schema changes </h1>
 
   <div id=sub-header>
-    October 2011 · 4 minute read
+    October 2011 · 3 minute read
   </div>
 
   <div class="entry-content">
-    <p>Running a web application means that you always develop new features (and fix bugs) which should be deployed as soon as possible. This is the only way these enhancements reach your users. However, it also means that your application is used by people from all over the world, i.e., there is no point in time, when you can just shutdown the servers and do any necessary maintenance work; downtime should be avoided.</p>
+    <p>Working on a constantly evolving web application means that sooner or later you will have to change your database schema. One of the most difficult changes to make is to add a new column to a table.</p>
 
-<p>Of particular difficulty are changes in code which require changes in the database schema, too. If you had the luxury of taking the servers down, you would be able to change the database schema, run any data migrations necessary and update the application code. But you do not have that luxury. So, you must make sure you do all those steps, while the servers are running, and at the same time you must ensure that at no point in the update process a request from a user fails.</p>
+<p>Let&rsquo;s say you need to add a new column <code>ncol</code> to an existing table <code>t</code> in a database. The new column is of type <code>INT</code>, it cannot take the <code>NULL</code> value and defaults to the value <code>0</code>. The SQL command to use is</p>
 
-<p>Updating the application code first is not an option, since it would try to use the new database schema, before it was deployed. The only option is to first update the database schema with the new changes, while making sure that existing code that uses the old schema does not break.</p>
-
-<p>However, that is not straightforward either. Consider the case of adding a new column which does not have a default value to use; any <code>INSERT</code> queries in the existing code would fail, since they do not account for the new column.</p>
-
-<p>Additionally, there are issues with <a href="http://mpessas.tumblr.com/post/11220255249/on-database-schema-changes">changing the database schema</a>, too; you must take extra care not to block any concurrent user requests to the database. So, you must plan ahead for the various steps you need to take.</p>
-
-<p>At <a href="https://www.transifex.net">Transifex</a> we have adopted the following procedure for handling probably the most complex type of change: adding a new column to a table.</p>
-
-<ul>
-<li><p>First, the new column is added to the database with no restrictions whatsoever using <code>NULL</code> as the default value. That is, in case we wanted to add a column named <code>col</code> to a table named <code>tbl</code> of type <code>INT</code> we would issue the query</p>
-
-<pre><code>ALTER TABLE tbl ADD col INT NULL
-</code></pre></li>
-</ul>
-
-<p>Allowing null values avoids rewriting the table, i.e., it is the fastest way to add a new column to a table. As a result, the time the table is locked for other requests is minimum. Moreover, any writes to the table will just use the <code>NULL</code> value for the specific column.
-- Set the default value for the column, if there is one. Assuming the default value for the above column is 0, we would issue the query</p>
-
-<pre><code>    ALTER TABLE tbl ALTER col SET DEFAULT 0
+<pre><code>ALTER TABLE t ADD ncol INT DEFAULT 0 NOT NULL
 </code></pre>
 
-<p>Setting the default value before updating the code to write to the new column allows any writes issued to take advantage of it.
-- Update the code to start writing data to the new column. At this point, the database is not fully consistent yet. By enabling the writes we will eventually reach a consistent state.
-- Update existing rows with the data they should have, i.e., migrate the existing data to the new schema. At the end of this step, the table should be in a consistent state. We can also make sure that we have changed all the writes to the database to use the new schema. For example, if the code update was correct, there should be no writes that add a <code>NULL</code> value.
-- Add the necessary constraints to the column. For example, add the constraint that the column is a foreign key.
-- Add the necessary indexes using the new column.
-- Update the code to start reading values from the column. The update is now complete.</p>
+<p>However, the <code>ALTER TABLE</code> command needs to acquire an <a href="http://www.postgresql.org/docs/9.1/static/explicit-locking.html">EXCLUSIVE LOCK</a> to the whole table, before it attempts to execute itself. An exclusive lock is the most strict variant of locks in PostgreSQL (and other databases) and it conflicts with every other type of lock defined. So, executing an <code>ALTER TABLE</code> command on a big table (think millions of rows and more) alongside other statements will block all those statements, even simple <code>SELECT</code>s.</p>
 
-<p>Other database schema changes can be handled in similar ways.</p>
+<p>Let&rsquo;s say the <code>ALTER TABLE</code> statement acquires the <code>EXCLUSIVE LOCK</code> on the table. Since there is a transaction that has an <code>EXCLUSIVE LOCK</code> on the table, every other transaction will block and wait for the first transaction to finish. The <code>ALTER TABLE</code> statement will happily add the column <code>ncol</code> to the table <code>t</code>. That is, it will visit every row, add the new field and set its value to the default one provided.  This action, actually, will result in rewriting the table and its indexes, for it changes the structure of the table. This could take minutes, depending on the size of the table <code>t</code>. Most live applications cannot afford that; if table <code>t</code> is accessed constantly, clients that use that table would block waiting for the <code>ALTER TABLE</code> statement to finish - the requests would probably time-out.</p>
 
-<p>In summary, we try to make the operation of adding the column as fast as possible, since this locks the table and blocks <strong>all</strong> queries. Then, we enable the writes to the table, so that we can reach a consistent state. Only then do we enforce the constraints and add the necessary indexes. Finally, we start reading and fully utilizing the new column.</p>
+<p>A way around the above problems is to break that <code>ALTER TABLE</code> statement to separate, &ldquo;lighter&rdquo; steps. As the <a href="http://www.postgresql.org/docs/9.1/static/sql-altertable.html">docs</a> say (section <em>Notes</em>), setting the columns to <code>NULL</code> by default will not require the heavy-weight operation of rewriting the whole table and the indexes. So, adding the above column can be done with the following group of statements:</p>
+
+<pre><code>ALTER TABLE t ADD ncol NULL
+ALTER TABLE t ALTER ncol SET DEFAULT 0
+UPDATE TABLE t SET ncol = 0
+ALTER TABLE t ALTER ncol SET NOT NULL
+</code></pre>
+
+<p>The above group of statements has the same effect as the original statement. However, only the first one requires an <code>EXPLICIT LOCK</code> on the table and that statement is executed very fast (think, milliseconds). As a result, any statement that might come and uses the locked table will only block for a tiny amount of time.</p>
 
   </div>
 
   <div id=links>
     
-      <a class="basic-alignment left" href="https://mpessas.github.io/posts/on-database-schema-changes/">&laquo; On database schema changes</a>
     
-    
-      <a class="basic-alignment left" href="https://mpessas.github.io/posts/iptables-in-a-hurry/">iptables in a hurry &raquo;</a>
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/on-database-and-code-changes/">On database and code changes &raquo;</a>
     
   </div>
 </section>
