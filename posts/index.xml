@@ -834,5 +834,17 @@ Keep also in mind that you will probably need to increase the maximum size of a 
 </description>
     </item>
     
+    <item>
+      <title>DISTINCT in SQL</title>
+      <link>https://mpessas.github.io/posts/distinct-in-sql/</link>
+      <pubDate>Sat, 12 Nov 2011 11:34:20 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/distinct-in-sql/</guid>
+      <description>&lt;p&gt;How does a RDBMS execute a query that has the &lt;code&gt;DISTINCT&lt;/code&gt; keyword? The most effective  way to ensure the uniqueness of the returned rows of a query is to sort them first; that is, to sort the result based on all fields. Depending on the number of fields &lt;code&gt;SELECT&lt;/code&gt;ed, this sorting could take a lot of time and need a lot of RAM. If the available RAM is not enough, the RDBMS will resort to using the disk, which is too slow.&lt;/p&gt;
+
+&lt;p&gt;So, it is very important to &lt;code&gt;SELECT&lt;/code&gt; as few fields as possible. This makes the sorting phase much faster and, additionally, requires less RAM. We had such an &lt;a href=&#34;http://blog.transifex.net/2011/11/a-little-bug-bites-the-dust-the-anatomy-of-fixing-performance-issues/&#34; title=&#34;DISTINCT issue at Transifex&#34;&gt;issue at Transifex&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>

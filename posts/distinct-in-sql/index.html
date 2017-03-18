@@ -19,10 +19,10 @@
     <title>
       
       
-         Russ Cox&#39;s articles on regular expressions 
+         DISTINCT in SQL 
       
     </title>
-    <link rel="canonical" href="https://mpessas.github.io/posts/russ-cox-regular-expressions/">
+    <link rel="canonical" href="https://mpessas.github.io/posts/distinct-in-sql/">
 
     <style>
   * {
@@ -392,27 +392,23 @@
 
 
 <section id=content>
-  <h1> Russ Cox&#39;s articles on regular expressions </h1>
+  <h1> DISTINCT in SQL </h1>
 
   <div id=sub-header>
-    December 2011 · 1 minute read
+    November 2011 · 1 minute read
   </div>
 
   <div class="entry-content">
-    <ul>
-<li><a href="http://swtch.com/~rsc/regexp/regexp1.html">http://swtch.com/~rsc/regexp/regexp1.html</a></li>
-<li><a href="http://swtch.com/~rsc/regexp/regexp2.html">http://swtch.com/~rsc/regexp/regexp2.html</a></li>
-<li><a href="http://swtch.com/~rsc/regexp/regexp3.html">http://swtch.com/~rsc/regexp/regexp3.html</a></li>
-</ul>
+    <p>How does a RDBMS execute a query that has the <code>DISTINCT</code> keyword? The most effective  way to ensure the uniqueness of the returned rows of a query is to sort them first; that is, to sort the result based on all fields. Depending on the number of fields <code>SELECT</code>ed, this sorting could take a lot of time and need a lot of RAM. If the available RAM is not enough, the RDBMS will resort to using the disk, which is too slow.</p>
+
+<p>So, it is very important to <code>SELECT</code> as few fields as possible. This makes the sorting phase much faster and, additionally, requires less RAM. We had such an <a href="http://blog.transifex.net/2011/11/a-little-bug-bites-the-dust-the-anatomy-of-fixing-performance-issues/" title="DISTINCT issue at Transifex">issue at Transifex</a>.</p>
 
   </div>
 
   <div id=links>
     
-      <a class="basic-alignment left" href="https://mpessas.github.io/posts/distinct-in-sql/">&laquo; DISTINCT in SQL</a>
     
-    
-      <a class="basic-alignment left" href="https://mpessas.github.io/posts/timedrotatingfilehandler/">TimedRotatingFileHandler &raquo;</a>
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/russ-cox-regular-expressions/">Russ Cox&#39;s articles on regular expressions &raquo;</a>
     
   </div>
 </section>
