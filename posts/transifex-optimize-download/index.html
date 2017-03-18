@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <base href="https://mpessas.github.io/">
+    
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400' rel='stylesheet' type='text/css'>
+
+    <link rel="icon" type="image/png" href="https://mpessas.github.io/favicon_16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://mpessas.github.io/favicon_32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://mpessas.github.io/favicon_128x128.png" sizes="128x128">
+
+    <title>
+      
+      
+         Optimizing the operation of downloading files in Transifex 
+      
+    </title>
+    <link rel="canonical" href="https://mpessas.github.io/posts/transifex-optimize-download/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+  }
+
+  body {
+    font-family:'Open Sans', 'Myriad Pro', Myriad, sans-serif;
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, time {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content time {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(2) {
+    float:right;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+</style>
+
+
+    
+  </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://mpessas.github.io/">That&#39;s weird...</a></h1>
+      <ul>
+        
+          <li><a href="https://github.com/mpessas/">Github</a></li>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Optimizing the operation of downloading files in Transifex </h1>
+
+  <div id=sub-header>
+    February 2013 · 4 minute read
+  </div>
+
+  <div class="entry-content">
+    
+
+<p>This is the story of taking a 80 seconds operation down to 2 seconds.</p>
+
+<p>One of the most common operations in Transifex is downloading a
+translation file (the second is uploading one). Since files are downloaded all the time, the process should be as fast as possible.</p>
+
+<p>Some projects, however, have files with thousands of entries, which
+presented us with some challenges: download times could take a lot of seconds depending on the size of the file — an issue for both our users and our servers :).</p>
+
+<p>So, about a year back we had to take a good look at the process.</p>
+
+<h4 id="exporting-a-file">Exporting a file</h4>
+
+<p>The process of exporting a file is straightforward.</p>
+
+<p>First, we fetch the <em>source strings</em> (the strings of the source language),  the <em>template file</em> of the resource and the corresponding <em>translation strings</em> in the specified language. If an entry has not been translated yet, we use the empty string as the translation.</p>
+
+<p>The template file is almost the same with the source file (e.g. the
+original PO file) of the resource, except that all translation strings have been replaced with a md5 hash that uniquely identifies the source string.</p>
+
+<p>So, given the md5 hash, we can tell which source string the entry in
+the template is for and which is the corresponding translation
+string.</p>
+
+<p>More details on the internals of the storage engine can be found in
+the
+<a href="http://help.transifex.com/features/formats.html#the-transifex-translation-storage-engine">documentation</a> of Transifex.</p>
+
+<h4 id="original-algorithm">Original algorithm</h4>
+
+<p>The algorithm (<em>compilation process</em>) would iterate over all
+translation strings and use a regular expression to locate the hash
+that corresponded to that string in the template file. Then, it would replace it with the actual translation string. The result was the translation file the user requested:</p>
+
+<pre><code>source_strings = fetch_source_strings_from_db()
+translations = fetch_translations_from_db()
+for string in source_strings:
+    translation = get_translation_for_source(translations, string)
+    regex_replace(string.hash, translation, template)
+return template
+</code></pre>
+
+<h4 id="improvements">Improvements</h4>
+
+<p>The first thing to do was to create a large PO file that could be used
+as a reference point for measuring the impact of each improvement. The one we generated had some tens of thousands of <code>msgid</code> entries and the original algorithm needed about 80 seconds to <em>compile</em> the result.</p>
+
+<h4 id="why-regular-expressions">Why regular expressions?</h4>
+
+<p>What struck us as odd was the use of regular expressions for what
+should be a simple search-&amp;-replace operation. Regular expressions are known to be much slower than an equivalent simple text operation.</p>
+
+<p>So, the first try was to change the regular expression call with a call to the replace function for strings. In Python, this means using
+<a href="http://docs.python.org/library/stdtypes.html#str.replace"><code>str.replace</code></a>
+instead of <a href="http://docs.python.org/library/re.html#re.sub"><code>re.sub</code></a>.
+The result was that the execution time dropped to half, to about 40s. But still, that was not enough.</p>
+
+<h4 id="revisiting-the-compilation-process">Revisiting the compilation process</h4>
+
+<p>Going back to the compilation process, the main problem was the for
+loop that iterated over all strings and did a search-and-replace in
+the whole text <strong>every</strong> time. That means that the original template was
+scanned multiple times — an <code>O(n^2)</code> algorithm. How could we do all replacements in one pass?</p>
+
+<p>Regular expressions to the rescue! It turns out the <code>re.sub</code> function
+can accept a function as an argument, which, given the matched object, returns a string to use as a replacement.</p>
+
+<p>From then on the way to go was clear: we created a dictionary (hash or map in other languages), <code>translations</code>, that mapped each hash to the
+corresponding string and a function, which, given a matched object,
+would use the dictionary to return the correct string.</p>
+
+<p>Then, all we needed to do is to construct a regular expression that
+matches md5 hashes and use that and the above function as arguments in <code>re.sub</code> to replace all hashes with the corresponding strings in one pass of the template:</p>
+
+<pre><code>md5_pattern = r'[0-9a-f]{32}'
+regex = re.compile(md5_pattern, re.IGNORECASE)
+return regex.sub(
+        lambda m: translations.get(m.group(0), m.group(0)), text
+    )
+</code></pre>
+
+<p>which is a <code>O(n)</code> algorithm.</p>
+
+<p>The execution time was crashed to about 10 seconds (compared to the 80 seconds that were needed for the initial process). But still, not good
+enough.</p>
+
+<h4 id="dealing-with-po-files">Dealing with PO files</h4>
+
+<p>The specific file we used for testing was a PO file and, given that
+the gettext format (the format of PO files) is among the most popular
+internationalization formats, we had to do better.</p>
+
+<p>This time the main bottleneck was some extra processing of the PO file
+performed at the end that adds the copyrights to the file header for
+translators that contributed to the translation.</p>
+
+<p>The previous implementation was iterating over the lines looking for
+the appropriate place to insert the names of the translators. As soon
+as it found that, it would insert them and then keep on iterating over
+those lines. Adding an explicit <code>break</code> statement resulted in another
+great decrease of the execution time: it dropped to <strong>1-2 seconds</strong>.</p>
+
+<h4 id="conclusions">Conclusions</h4>
+
+<p>First, developers are pretty bad at finding the bottleneck of a process. The initial thought of the database queries being the bottleneck was totally wrong.</p>
+
+<p>The most important thing, though, is that the most important thing to take care of are the algorithms we use in our work.</p>
+
+  </div>
+
+  <div id=links>
+    
+    
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/using-functions-in-update-queries-django/">Using functions in UPDATE queries from the Django ORM &raquo;</a>
+    
+  </div>
+</section>
+
+  
+</body>
+</html>
+
+
+

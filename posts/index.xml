@@ -578,5 +578,122 @@ print w.slug
 </description>
     </item>
     
+    <item>
+      <title>Optimizing the operation of downloading files in Transifex</title>
+      <link>https://mpessas.github.io/posts/transifex-optimize-download/</link>
+      <pubDate>Sat, 02 Feb 2013 11:28:43 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/transifex-optimize-download/</guid>
+      <description>
+
+&lt;p&gt;This is the story of taking a 80 seconds operation down to 2 seconds.&lt;/p&gt;
+
+&lt;p&gt;One of the most common operations in Transifex is downloading a
+translation file (the second is uploading one). Since files are downloaded all the time, the process should be as fast as possible.&lt;/p&gt;
+
+&lt;p&gt;Some projects, however, have files with thousands of entries, which
+presented us with some challenges: download times could take a lot of seconds depending on the size of the file — an issue for both our users and our servers :).&lt;/p&gt;
+
+&lt;p&gt;So, about a year back we had to take a good look at the process.&lt;/p&gt;
+
+&lt;h4 id=&#34;exporting-a-file&#34;&gt;Exporting a file&lt;/h4&gt;
+
+&lt;p&gt;The process of exporting a file is straightforward.&lt;/p&gt;
+
+&lt;p&gt;First, we fetch the &lt;em&gt;source strings&lt;/em&gt; (the strings of the source language),  the &lt;em&gt;template file&lt;/em&gt; of the resource and the corresponding &lt;em&gt;translation strings&lt;/em&gt; in the specified language. If an entry has not been translated yet, we use the empty string as the translation.&lt;/p&gt;
+
+&lt;p&gt;The template file is almost the same with the source file (e.g. the
+original PO file) of the resource, except that all translation strings have been replaced with a md5 hash that uniquely identifies the source string.&lt;/p&gt;
+
+&lt;p&gt;So, given the md5 hash, we can tell which source string the entry in
+the template is for and which is the corresponding translation
+string.&lt;/p&gt;
+
+&lt;p&gt;More details on the internals of the storage engine can be found in
+the
+&lt;a href=&#34;http://help.transifex.com/features/formats.html#the-transifex-translation-storage-engine&#34;&gt;documentation&lt;/a&gt; of Transifex.&lt;/p&gt;
+
+&lt;h4 id=&#34;original-algorithm&#34;&gt;Original algorithm&lt;/h4&gt;
+
+&lt;p&gt;The algorithm (&lt;em&gt;compilation process&lt;/em&gt;) would iterate over all
+translation strings and use a regular expression to locate the hash
+that corresponded to that string in the template file. Then, it would replace it with the actual translation string. The result was the translation file the user requested:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;source_strings = fetch_source_strings_from_db()
+translations = fetch_translations_from_db()
+for string in source_strings:
+    translation = get_translation_for_source(translations, string)
+    regex_replace(string.hash, translation, template)
+return template
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;improvements&#34;&gt;Improvements&lt;/h4&gt;
+
+&lt;p&gt;The first thing to do was to create a large PO file that could be used
+as a reference point for measuring the impact of each improvement. The one we generated had some tens of thousands of &lt;code&gt;msgid&lt;/code&gt; entries and the original algorithm needed about 80 seconds to &lt;em&gt;compile&lt;/em&gt; the result.&lt;/p&gt;
+
+&lt;h4 id=&#34;why-regular-expressions&#34;&gt;Why regular expressions?&lt;/h4&gt;
+
+&lt;p&gt;What struck us as odd was the use of regular expressions for what
+should be a simple search-&amp;amp;-replace operation. Regular expressions are known to be much slower than an equivalent simple text operation.&lt;/p&gt;
+
+&lt;p&gt;So, the first try was to change the regular expression call with a call to the replace function for strings. In Python, this means using
+&lt;a href=&#34;http://docs.python.org/library/stdtypes.html#str.replace&#34;&gt;&lt;code&gt;str.replace&lt;/code&gt;&lt;/a&gt;
+instead of &lt;a href=&#34;http://docs.python.org/library/re.html#re.sub&#34;&gt;&lt;code&gt;re.sub&lt;/code&gt;&lt;/a&gt;.
+The result was that the execution time dropped to half, to about 40s. But still, that was not enough.&lt;/p&gt;
+
+&lt;h4 id=&#34;revisiting-the-compilation-process&#34;&gt;Revisiting the compilation process&lt;/h4&gt;
+
+&lt;p&gt;Going back to the compilation process, the main problem was the for
+loop that iterated over all strings and did a search-and-replace in
+the whole text &lt;strong&gt;every&lt;/strong&gt; time. That means that the original template was
+scanned multiple times — an &lt;code&gt;O(n^2)&lt;/code&gt; algorithm. How could we do all replacements in one pass?&lt;/p&gt;
+
+&lt;p&gt;Regular expressions to the rescue! It turns out the &lt;code&gt;re.sub&lt;/code&gt; function
+can accept a function as an argument, which, given the matched object, returns a string to use as a replacement.&lt;/p&gt;
+
+&lt;p&gt;From then on the way to go was clear: we created a dictionary (hash or map in other languages), &lt;code&gt;translations&lt;/code&gt;, that mapped each hash to the
+corresponding string and a function, which, given a matched object,
+would use the dictionary to return the correct string.&lt;/p&gt;
+
+&lt;p&gt;Then, all we needed to do is to construct a regular expression that
+matches md5 hashes and use that and the above function as arguments in &lt;code&gt;re.sub&lt;/code&gt; to replace all hashes with the corresponding strings in one pass of the template:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;md5_pattern = r&#39;[0-9a-f]{32}&#39;
+regex = re.compile(md5_pattern, re.IGNORECASE)
+return regex.sub(
+        lambda m: translations.get(m.group(0), m.group(0)), text
+    )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which is a &lt;code&gt;O(n)&lt;/code&gt; algorithm.&lt;/p&gt;
+
+&lt;p&gt;The execution time was crashed to about 10 seconds (compared to the 80 seconds that were needed for the initial process). But still, not good
+enough.&lt;/p&gt;
+
+&lt;h4 id=&#34;dealing-with-po-files&#34;&gt;Dealing with PO files&lt;/h4&gt;
+
+&lt;p&gt;The specific file we used for testing was a PO file and, given that
+the gettext format (the format of PO files) is among the most popular
+internationalization formats, we had to do better.&lt;/p&gt;
+
+&lt;p&gt;This time the main bottleneck was some extra processing of the PO file
+performed at the end that adds the copyrights to the file header for
+translators that contributed to the translation.&lt;/p&gt;
+
+&lt;p&gt;The previous implementation was iterating over the lines looking for
+the appropriate place to insert the names of the translators. As soon
+as it found that, it would insert them and then keep on iterating over
+those lines. Adding an explicit &lt;code&gt;break&lt;/code&gt; statement resulted in another
+great decrease of the execution time: it dropped to &lt;strong&gt;1-2 seconds&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h4 id=&#34;conclusions&#34;&gt;Conclusions&lt;/h4&gt;
+
+&lt;p&gt;First, developers are pretty bad at finding the bottleneck of a process. The initial thought of the database queries being the bottleneck was totally wrong.&lt;/p&gt;
+
+&lt;p&gt;The most important thing, though, is that the most important thing to take care of are the algorithms we use in our work.&lt;/p&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
