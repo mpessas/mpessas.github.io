@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-	<meta name="generator" content="Hugo 0.19" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="HandheldFriendly" content="True">
@@ -20,10 +19,10 @@
     <title>
       
       
-         That&#39;s weird... 
+         Forward attribute access for wrapper classes 
       
     </title>
-    <link rel="canonical" href="https://mpessas.github.io/">
+    <link rel="canonical" href="https://mpessas.github.io/posts/forward-attribute-access-for-wrapper-classes/">
 
     <style>
   * {
@@ -379,8 +378,6 @@
 
 
     
-      <link href="https://mpessas.github.io/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
-    
   </head>
 
   <body>
@@ -395,55 +392,100 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Forward attribute access for wrapper classes </h1>
+
+  <div id=sub-header>
+    July 2013 · 3 minute read
+  </div>
+
+  <div class="entry-content">
+    <p>Let&rsquo;s say you want to create a wrapper class around a Django model. For convenience, you want your wrapper class to forward any direct field access calls to the model it wraps. That is, you want the following code to work:</p>
+
+<pre><code>class MyModel(models.Model):
+    slug = models.SlugField()
+
+class Wrapper(object):
+    model = MyModel
+
+    def __init__(self, w):
+        self.w = w
+
+w = MyModel(slug='slug')
+w = Wrapper(w)
+print w.slug
+</code></pre>
+
+<p>This boils down to dynamically adding properties to the <code>Wrapper</code> class that forward the call to and return the value from the wrapped instance.</p>
+
+<p>Let&rsquo;s also say that you want to create a base <code>Wrapper</code> class which can be used for all wrapper classes around your models.</p>
+
+<p>One way to do it would be to use the <code>__getattr__</code> function. Keep in mind we are only interested in responding to calls to fields, not every attribute of the model instance.</p>
+
+<pre><code>class Wrapper(object):
+
+    def __init__(self, queryset):
+        self.qs = queryset
+        self._qs_field_names = [f.name for f in self.qs._meta.fields]
+
+    def __getattr__(self, name):
+        if name in self._qs_field_names:
+            return getattr(self.qs, name)
+        return super(Wrapper, self).__getattr__(name)
+</code></pre>
+
+<p>However, this means that all subclasses that want to override <code>__getattr__</code> will have to remember to call <code>super</code> as well. This approach works well; on the other hand, it puts an extra burden to developers: they have to know the internals of the parent class whenever they need to override an internal function like <code>__getattr__</code>.</p>
+
+<p>The other way is to use <em>metaclasses</em> and override the <code>__new__</code> method:</p>
+
+<pre><code>def name_getter(obj, name):
+    &quot;&quot;&quot;Closure to creatre a function that operates on the given name.&quot;&quot;&quot;
+    def getter(obj):
+        return getattr(obj.qs, name)
+    return getter
+
+class WrapperMeta(type):
+
+    def __new__(meta, name, bases, dct):
+        cls = super(ServiceMeta, meta).__new__(meta, name, bases, dct)
+        if cls.model is not None:  # Ignore base class case
+            for f in cls.model._meta.fields:
+                setattr(cls, f.name, property(name_getter(cls, f.name)))
+        return cls
+
+class Wrapper(object):
+    __metaclass__ = WrapperMeta
+    model = None
+
+    def __init__(self, queryset):
+        self.qs = queryset
+</code></pre>
+
+<p>First, the <code>WrapperMeta</code> metaclass overrides the <code>__new__</code> method, so that it will automatically add a <code>property</code> to the <em>derived</em> classes for each field in the base class.</p>
+
+<p>The <code>property</code> function takes as (first) argument a function that takes one argument (the object, i.e., <code>self</code>) and returns a value. Since we create those properties dynamically for every attribute, we need to create a function that remembers the name of the attribute any specific property handles. Thus, we use a closure, <code>name_getter</code>. The <code>name_getter</code> function stores the name <code>name</code> of the attribute we want to access and returns a function that, given an object, will return the value of its attribute named <code>name</code>.</p>
+
+<p>This allows us to create simple wrapper classes for a django model:</p>
+
+<pre><code>class MyWrapper(Wrapper):
+    model = MyModel
+
+w = MyWrapper(MyModel(slug='slug'))
+print w.slug
+</code></pre>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-env-files/">Using .env files</a></h2>
-        <div id=date>
-          <time>August 2016</time>
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/django-forms-models-and-dry/">Django, forms, models and DRY</a></h2>
-        <div id=date>
-          <time>November 2014</time>
-        </div>
-      </li>
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/">Running your Django tests in memory with PostgreSQL &raquo;</a>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/exposing-objects-in-multiple-represenations/">Exposing objects in multiple represenations</a></h2>
-        <div id=date>
-          <time>February 2014</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-gettext-in-django/">Using gettext in Django</a></h2>
-        <div id=date>
-          <time>November 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/">Running your Django tests in memory with PostgreSQL</a></h2>
-        <div id=date>
-          <time>October 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/forward-attribute-access-for-wrapper-classes/">Forward attribute access for wrapper classes</a></h2>
-        <div id=date>
-          <time>July 2013</time>
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 
