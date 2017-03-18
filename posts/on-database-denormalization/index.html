@@ -19,10 +19,10 @@
     <title>
       
       
-         On reference tables 
+         On database denormalization 
       
     </title>
-    <link rel="canonical" href="https://mpessas.github.io/posts/on-reference-tables/">
+    <link rel="canonical" href="https://mpessas.github.io/posts/on-database-denormalization/">
 
     <style>
   * {
@@ -392,42 +392,52 @@
 
 
 <section id=content>
-  <h1> On reference tables </h1>
+  <h1> On database denormalization </h1>
 
   <div id=sub-header>
-    October 2011 · 3 minute read
+    September 2011 · 2 minute read
   </div>
 
   <div class="entry-content">
-    <p>Working on a constantly evolving web application means that sooner or later you will have to change your database schema. One of the most difficult changes to make is to add a new column to a table.</p>
+    <p>One of the factors of a successful web application is its speed. However, the more successful the application is, the more serious performance issues it will have. As the users and their activity in the application and the data they manage begin to increase, every action becomes even slower, since it competes with more requests for the same resources (CPU, RAM, I/O) and has more data to manage. Usually, the problem lies in the database hits and the queries the app executes. So, if you want to scale, you have at one point or another to look at your database access patterns.</p>
 
-<p>Let&rsquo;s say you need to add a new column <code>ncol</code> to an existing table <code>t</code> in a database. The new column is of type <code>INT</code>, it cannot take the <code>NULL</code> value and defaults to the value <code>0</code>. The SQL command to use is</p>
+<p>One of the things we can do is start denormalizing things in the database. What is denormalization? Well, first you need to know what <a href="http://en.wikipedia.org/wiki/Database_normalization">normalization</a> is. Basically, normalizing a database (at least in the 3rd normal form that everybody should strive to design for) means you keep every piece of information in one place. The main advantage of having every piece of information stored in one place is that there is no risk for inconsistencies.</p>
 
-<pre><code>ALTER TABLE t ADD ncol INT DEFAULT 0 NOT NULL
+<p>Usually you achieve normalized schemas by creating tables, each one of which is the reference for every type of information stored in the database. Then, in order to get the information you want you join the relevant tables.</p>
+
+<p>For example, say you have the following schema:</p>
+
+<pre><code>CREATE TABLE resource (
+    id INTEGER SERIAL,
+    slug VARCHAR(20),
+    name VARCHAR(50),
+)
+
+CREATE TABLE source_entity (
+    id INTEGER SERIAL,
+    string VARCHAR(50),
+    resource_id INTEGER FOREIGN KEY REFERENCES resource(id),
+)
+
+CREATE TABLE translation (
+    id INTEGER SERIAL,
+    string VARCHAR(50),
+    language_id INTEGER,
+    source_entity_id INTEGER FOREIGN KEY REFERENCES source_entity(id),
+)
 </code></pre>
 
-<p>However, the <code>ALTER TABLE</code> command needs to acquire an <a href="http://www.postgresql.org/docs/9.1/static/explicit-locking.html">EXCLUSIVE LOCK</a> to the whole table, before it attempts to execute itself. An exclusive lock is the most strict variant of locks in PostgreSQL (and other databases) and it conflicts with every other type of lock defined. So, executing an <code>ALTER TABLE</code> command on a big table (think millions of rows and more) alongside other statements will block all those statements, even simple <code>SELECT</code>s.</p>
+<p>The above example comes from <a href="https://www.transifex.net">Transifex</a>. A project in Transifex has one or more <em>resources</em> that correspond to a translation unit in the project (e.g. a po file). Each resource has one or more <em>source entities</em>. A source entity is more or less a key to identify each translatable message in the resource. For each source entity there is one <em>translation</em> per language. The relationship between the three entities is:</p>
 
-<p>Let&rsquo;s say the <code>ALTER TABLE</code> statement acquires the <code>EXCLUSIVE LOCK</code> on the table. Since there is a transaction that has an <code>EXCLUSIVE LOCK</code> on the table, every other transaction will block and wait for the first transaction to finish. The <code>ALTER TABLE</code> statement will happily add the column <code>ncol</code> to the table <code>t</code>. That is, it will visit every row, add the new field and set its value to the default one provided.  This action, actually, will result in rewriting the table and its indexes, for it changes the structure of the table. This could take minutes, depending on the size of the table <code>t</code>. Most live applications cannot afford that; if table <code>t</code> is accessed constantly, clients that use that table would block waiting for the <code>ALTER TABLE</code> statement to finish - the requests would probably time-out.</p>
-
-<p>A way around the above problems is to break that <code>ALTER TABLE</code> statement to separate, &ldquo;lighter&rdquo; steps. As the <a href="http://www.postgresql.org/docs/9.1/static/sql-altertable.html">docs</a> say (section <em>Notes</em>), setting the columns to <code>NULL</code> by default will not require the heavy-weight operation of rewriting the whole table and the indexes. So, adding the above column can be done with the following group of statements:</p>
-
-<pre><code>ALTER TABLE t ADD ncol NULL
-ALTER TABLE t ALTER ncol SET DEFAULT 0
-UPDATE TABLE t SET ncol = 0
-ALTER TABLE t ALTER ncol SET NOT NULL
+<pre><code>resource
 </code></pre>
-
-<p>The above group of statements has the same effect as the original statement. However, only the first one requires an <code>EXPLICIT LOCK</code> on the table and that statement is executed very fast (think, milliseconds). As a result, any statement that might come and uses the locked table will only block for a tiny amount of time.</p>
 
   </div>
 
   <div id=links>
     
-      <a class="basic-alignment left" href="https://mpessas.github.io/posts/on-database-denormalization/">&laquo; On database denormalization</a>
     
-    
-      <a class="basic-alignment left" href="https://mpessas.github.io/posts/on-database-schema-changes/">On database schema changes &raquo;</a>
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/on-reference-tables/">On reference tables &raquo;</a>
     
   </div>
 </section>
