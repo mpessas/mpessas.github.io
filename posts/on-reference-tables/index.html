@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-	<meta name="generator" content="Hugo 0.19" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="HandheldFriendly" content="True">
@@ -20,10 +19,10 @@
     <title>
       
       
-         That&#39;s weird... 
+         On reference tables 
       
     </title>
-    <link rel="canonical" href="https://mpessas.github.io/">
+    <link rel="canonical" href="https://mpessas.github.io/posts/on-reference-tables/">
 
     <style>
   * {
@@ -379,8 +378,6 @@
 
 
     
-      <link href="https://mpessas.github.io/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
-    
   </head>
 
   <body>
@@ -395,125 +392,47 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> On reference tables </h1>
+
+  <div id=sub-header>
+    October 2011 · 3 minute read
+  </div>
+
+  <div class="entry-content">
+    <p>Working on a constantly evolving web application means that sooner or later you will have to change your database schema. One of the most difficult changes to make is to add a new column to a table.</p>
+
+<p>Let&rsquo;s say you need to add a new column <code>ncol</code> to an existing table <code>t</code> in a database. The new column is of type <code>INT</code>, it cannot take the <code>NULL</code> value and defaults to the value <code>0</code>. The SQL command to use is</p>
+
+<pre><code>ALTER TABLE t ADD ncol INT DEFAULT 0 NOT NULL
+</code></pre>
+
+<p>However, the <code>ALTER TABLE</code> command needs to acquire an <a href="http://www.postgresql.org/docs/9.1/static/explicit-locking.html">EXCLUSIVE LOCK</a> to the whole table, before it attempts to execute itself. An exclusive lock is the most strict variant of locks in PostgreSQL (and other databases) and it conflicts with every other type of lock defined. So, executing an <code>ALTER TABLE</code> command on a big table (think millions of rows and more) alongside other statements will block all those statements, even simple <code>SELECT</code>s.</p>
+
+<p>Let&rsquo;s say the <code>ALTER TABLE</code> statement acquires the <code>EXCLUSIVE LOCK</code> on the table. Since there is a transaction that has an <code>EXCLUSIVE LOCK</code> on the table, every other transaction will block and wait for the first transaction to finish. The <code>ALTER TABLE</code> statement will happily add the column <code>ncol</code> to the table <code>t</code>. That is, it will visit every row, add the new field and set its value to the default one provided.  This action, actually, will result in rewriting the table and its indexes, for it changes the structure of the table. This could take minutes, depending on the size of the table <code>t</code>. Most live applications cannot afford that; if table <code>t</code> is accessed constantly, clients that use that table would block waiting for the <code>ALTER TABLE</code> statement to finish - the requests would probably time-out.</p>
+
+<p>A way around the above problems is to break that <code>ALTER TABLE</code> statement to separate, &ldquo;lighter&rdquo; steps. As the <a href="http://www.postgresql.org/docs/9.1/static/sql-altertable.html">docs</a> say (section <em>Notes</em>), setting the columns to <code>NULL</code> by default will not require the heavy-weight operation of rewriting the whole table and the indexes. So, adding the above column can be done with the following group of statements:</p>
+
+<pre><code>ALTER TABLE t ADD ncol NULL
+ALTER TABLE t ALTER ncol SET DEFAULT 0
+UPDATE TABLE t SET ncol = 0
+ALTER TABLE t ALTER ncol SET NOT NULL
+</code></pre>
+
+<p>The above group of statements has the same effect as the original statement. However, only the first one requires an <code>EXPLICIT LOCK</code> on the table and that statement is executed very fast (think, milliseconds). As a result, any statement that might come and uses the locked table will only block for a tiny amount of time.</p>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-env-files/">Using .env files</a></h2>
-        <div id=date>
-          <time>August 2016</time>
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/django-forms-models-and-dry/">Django, forms, models and DRY</a></h2>
-        <div id=date>
-          <time>November 2014</time>
-        </div>
-      </li>
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/on-database-schema-changes/">On database schema changes &raquo;</a>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/exposing-objects-in-multiple-represenations/">Exposing objects in multiple represenations</a></h2>
-        <div id=date>
-          <time>February 2014</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-gettext-in-django/">Using gettext in Django</a></h2>
-        <div id=date>
-          <time>November 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/">Running your Django tests in memory with PostgreSQL</a></h2>
-        <div id=date>
-          <time>October 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/forward-attribute-access-for-wrapper-classes/">Forward attribute access for wrapper classes</a></h2>
-        <div id=date>
-          <time>July 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-functions-in-update-queries-django/">Using functions in UPDATE queries from the Django ORM</a></h2>
-        <div id=date>
-          <time>April 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/transifex-optimize-download/">Optimizing the operation of downloading files in Transifex</a></h2>
-        <div id=date>
-          <time>February 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/testing-with-postgresql/">Testing with PostgreSQL</a></h2>
-        <div id=date>
-          <time>January 2012</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/timedrotatingfilehandler/">TimedRotatingFileHandler</a></h2>
-        <div id=date>
-          <time>December 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/russ-cox-regular-expressions/">Russ Cox&#39;s articles on regular expressions</a></h2>
-        <div id=date>
-          <time>December 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/distinct-in-sql/">DISTINCT in SQL</a></h2>
-        <div id=date>
-          <time>November 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/iptables-in-a-hurry/">iptables in a hurry</a></h2>
-        <div id=date>
-          <time>November 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/on-database-and-code-changes/">On database and code changes</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/on-database-schema-changes/">On database schema changes</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/on-reference-tables/">On reference tables</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 
