@@ -846,5 +846,22 @@ Keep also in mind that you will probably need to increase the maximum size of a 
 </description>
     </item>
     
+    <item>
+      <title>iptables in a hurry</title>
+      <link>https://mpessas.github.io/posts/iptables-in-a-hurry/</link>
+      <pubDate>Wed, 09 Nov 2011 11:35:21 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/iptables-in-a-hurry/</guid>
+      <description>&lt;p&gt;Accepting incoming connections to a port only from specific hosts in the middle of the night:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;iptables -I INPUT -p tcp --dport $dport -j REJECT
+for ip in $ips; do
+    iptables -I INPUT -p tcp --dport $dport --source $ip -j ACCEPT
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have to do it in the above order, since -I &lt;strong&gt;inserts&lt;/strong&gt; the rule at the head of the list of rules.&lt;/p&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
