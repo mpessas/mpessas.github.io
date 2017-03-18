@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>That&#39;s weird...</title>
+    <link>https://mpessas.github.io/index.xml</link>
+    <description>Recent content on That&#39;s weird...</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 13 Aug 2016 10:25:01 +0200</lastBuildDate>
+    <atom:link href="https://mpessas.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Using .env files</title>
+      <link>https://mpessas.github.io/posts/using-env-files/</link>
+      <pubDate>Sat, 13 Aug 2016 10:25:01 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/using-env-files/</guid>
+      <description>&lt;p&gt;Enabling the environment variables in a bash script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;env $(cat .env.test | xargs)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Django, forms, models and DRY</title>
+      <link>https://mpessas.github.io/posts/django-forms-models-and-dry/</link>
+      <pubDate>Sun, 23 Nov 2014 09:42:37 +0200</pubDate>
+      
+      <guid>https://mpessas.github.io/posts/django-forms-models-and-dry/</guid>
+      <description>&lt;p&gt;Django provides a &lt;code&gt;forms&lt;/code&gt; package to make working with forms in web applications easier.&lt;/p&gt;
+
+&lt;p&gt;Forms work by subclassing the &lt;code&gt;Form&lt;/code&gt; class and defining the fields in the class:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyForm(forms.Form):
+    field1 = forms.CharField(max_length=10)
+    field2 = forms.IntegerField()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But in most cases a form mirrors a model in the database, where you have already
+declared the properties for those fields. For this use case, Django provides
+&lt;code&gt;ModelForm&lt;/code&gt; to use as a base class.&lt;/p&gt;
+
+&lt;p&gt;As an example, if you had the following model:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyModel(models.Model):
+    field1 = models.CharField(max_length=10)
+    field2 = models.IntegerField()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;you could declare a form for it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyModelForm(forms.ModelForm):
+    class Meta:
+        model = MyModel
+        fields = (&#39;field1&#39;, &#39;field2&#39;, )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There are cases, however, where your form does not correspond to just one model
+or the mapping is not very clear. For instance, you provide an API for your web
+application, which must be stable no matter how the models change, and have some
+complex validation that spans across models. Keep in mind that at the end of the
+day &lt;a href=&#34;http://www.pydanny.com/core-concepts-django-forms.html#forms-validate-dictionaries&#34;&gt;forms validate dictionaries&lt;/a&gt; and they are pretty good at it, so why not
+use them for validation in general?&lt;/p&gt;
+
+&lt;p&gt;In this case, you could create the form by hand, but that is not very DRY; you
+would have to edit validation in two places, whenever a change is needed.&lt;/p&gt;
+
+&lt;p&gt;A better approach is to do what Django already does in order to construct a
+&lt;code&gt;ModelForm&lt;/code&gt;. Every field in a model has a method called &lt;a href=&#34;https://github.com/django/django/blob/bcb693ebd4d3743cb194c6fd05b2d70fb9696a4c/django/db/models/fields/__init__.py#L809&#34;&gt;&lt;code&gt;formfield&lt;/code&gt;&lt;/a&gt;, which
+constructs a &lt;code&gt;forms.Field&lt;/code&gt; instance that corresponds to itself: it has the
+correct type and correct arguments in place, which you can also override.&lt;/p&gt;
+
+&lt;p&gt;The following function allows you to create a &lt;code&gt;forms.Field&lt;/code&gt; this way.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def construct_form_field(model, field_name, **kwargs):
+    app_name, model_name = model.split(&#39;.&#39;, 1)
+    Model = get_model(app_name, model_name)
+    field = Model._meta.get_field_by_name(field_name)[0]
+    return field.formfield(**kwargs)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can use this function then in a form to define the fields you need:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyForm(forms.Form):
+    field1 = construct_form_field(&#39;app.Model1&#39;, &#39;field1&#39;)
+    field2 = construct_form_field(&#39;app.Model2&#39;, &#39;field2&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
