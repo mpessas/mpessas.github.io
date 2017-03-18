@@ -2,98 +2,98 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://mpessas.github.io/posts/using-env-files/</loc>
+    <loc>http://blog.bessas.me/posts/using-env-files/</loc>
     <lastmod>2016-08-13T10:25:01+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/django-forms-models-and-dry/</loc>
+    <loc>http://blog.bessas.me/posts/django-forms-models-and-dry/</loc>
     <lastmod>2014-11-23T09:42:37+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/exposing-objects-in-multiple-represenations/</loc>
+    <loc>http://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/</loc>
     <lastmod>2014-02-11T11:11:02+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/using-gettext-in-django/</loc>
+    <loc>http://blog.bessas.me/posts/using-gettext-in-django/</loc>
     <lastmod>2013-11-02T11:20:24+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/</loc>
+    <loc>http://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/</loc>
     <lastmod>2013-10-19T11:22:45+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/forward-attribute-access-for-wrapper-classes/</loc>
+    <loc>http://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/</loc>
     <lastmod>2013-07-11T11:24:31+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/using-functions-in-update-queries-django/</loc>
+    <loc>http://blog.bessas.me/posts/using-functions-in-update-queries-django/</loc>
     <lastmod>2013-04-06T11:26:49+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/transifex-optimize-download/</loc>
+    <loc>http://blog.bessas.me/posts/transifex-optimize-download/</loc>
     <lastmod>2013-02-02T11:28:43+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/testing-with-postgresql/</loc>
+    <loc>http://blog.bessas.me/posts/testing-with-postgresql/</loc>
     <lastmod>2012-01-06T11:30:08+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/timedrotatingfilehandler/</loc>
+    <loc>http://blog.bessas.me/posts/timedrotatingfilehandler/</loc>
     <lastmod>2011-12-27T11:31:39+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/russ-cox-regular-expressions/</loc>
+    <loc>http://blog.bessas.me/posts/russ-cox-regular-expressions/</loc>
     <lastmod>2011-12-26T11:33:09+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/distinct-in-sql/</loc>
+    <loc>http://blog.bessas.me/posts/distinct-in-sql/</loc>
     <lastmod>2011-11-12T11:34:20+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/iptables-in-a-hurry/</loc>
+    <loc>http://blog.bessas.me/posts/iptables-in-a-hurry/</loc>
     <lastmod>2011-11-09T11:35:21+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/on-database-and-code-changes/</loc>
+    <loc>http://blog.bessas.me/posts/on-database-and-code-changes/</loc>
     <lastmod>2011-10-13T11:36:36+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/on-database-schema-changes/</loc>
+    <loc>http://blog.bessas.me/posts/on-database-schema-changes/</loc>
     <lastmod>2011-10-09T11:37:46+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/on-reference-tables/</loc>
+    <loc>http://blog.bessas.me/posts/on-reference-tables/</loc>
     <lastmod>2011-10-04T11:38:38+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/on-database-denormalization/</loc>
+    <loc>http://blog.bessas.me/posts/on-database-denormalization/</loc>
     <lastmod>2011-09-29T11:39:32+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/posts/</loc>
+    <loc>http://blog.bessas.me/posts/</loc>
     <lastmod>2016-08-13T10:25:01+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://mpessas.github.io/</loc>
+    <loc>http://blog.bessas.me/</loc>
     <lastmod>2016-08-13T10:25:01+02:00</lastmod>
     <priority>0</priority>
   </url>
