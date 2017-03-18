@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-	<meta name="generator" content="Hugo 0.19" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="HandheldFriendly" content="True">
@@ -20,10 +19,10 @@
     <title>
       
       
-         That&#39;s weird... 
+         Testing with PostgreSQL 
       
     </title>
-    <link rel="canonical" href="https://mpessas.github.io/">
+    <link rel="canonical" href="https://mpessas.github.io/posts/testing-with-postgresql/">
 
     <style>
   * {
@@ -379,8 +378,6 @@
 
 
     
-      <link href="https://mpessas.github.io/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
-    
   </head>
 
   <body>
@@ -395,76 +392,118 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Testing with PostgreSQL </h1>
+
+  <div id=sub-header>
+    January 2012 · 3 minute read
+  </div>
+
+  <div class="entry-content">
+    <p>Transifex is a quite big application, counting tens of thousands of lines of Python, javascript and HTML code. In order to make sure the code works, it has an extensive test suite, which, obviously, takes quite some time to run.</p>
+
+<p>There are various things that can be done to make tests run faster. But let&rsquo;s talk about databases.</p>
+
+<p>Transifex is built on top of <a href="https://www.djangoproject.com">Django</a> and uses its ORM. As a result, it can use various database backends, like <a href="http://www.sqlite.org/">SQLite</a> and <a href="http://www.postgresql.org/">PostgreSQL</a>.</p>
+
+<p>When Django is configured to use SQLite, it does a nice little trick when running the test suite; it creates the database in memory. As a result, database access is very fast, since there is no I/O, which results in reduced execution time for the tests.</p>
+
+<p>For example, we run the test suite for the <em>projects</em> app of Transifex:</p>
+
+<pre><code>time ./manage.py test projects
+</code></pre>
+
+<p>and the results are:</p>
+
+<pre><code>real    2m52.429s
+user    2m5.132s
+sys     0m2.953s
+</code></pre>
+
+<p>For the <em>resources</em> app (the test suite of which is much bigger) the results are:</p>
+
+<pre><code>real    6m29.072s
+user    4m35.209s
+sys     0m8.956s
+</code></pre>
+
+<p>Of course, the above numbers are not a benchmark, but just an indication of how long it takes to run those tests on a machine with 8GB of RAM.</p>
+
+<p>However, <a href="https://www.transifex.net">Transifex.net</a> runs on PostgreSQL and all testing should be done with the setup that is used in production. For instance, PostgreSQL is much more strict about transaction semantics than SQLite and that affects many tests. That means, tests should be run against PostgreSQL.</p>
+
+<p>But, the default setup of PostgreSQL is not optimized at all. In fact, the default settings are chosen, so that PostgreSQL can run on servers with as little as 64MB of RAM (or something like that).</p>
+
+<p>With the default setup of PostgreSQL, the <em>projects</em> test suite runs in:</p>
+
+<pre><code>real    4m40.891s
+user    2m16.898s
+sys     0m3.816s
+</code></pre>
+
+<p>and the <em>resources</em> app in</p>
+
+<pre><code>real    10m7.483s
+user    4m58.841s
+sys     0m9.566s
+</code></pre>
+
+<p>Both running times are mush worse than those achieved, when using SQLite as database backend.</p>
+
+<p>There are a few settings, however, which could be optimized to make PostgreSQL faster for testing. In my machine, I have</p>
+
+<pre><code>shared_buffers = 512MB
+work_mem = 16MB
+fsync = off
+synchronous_commit = off
+wal_buffers = 64MB
+checkpoint_segments = 36
+checkpoint_timeout = 10min
+random_page_cost = 2.0
+effective_cache_size = 1024MB
+</code></pre>
+
+<p>The goal is to allow PostgreSQL to use much more memory and, as a result, to choose more efficient execution plans for the queries. For instance, we set the <code>work_mem</code> to 16MB, a value large enough (for the tests of Transifex), so that all <code>SORT</code> operations are executed in RAM.</p>
+
+<p>At the same time, we try to reduce the I/O that PostgreSQL will perform. For example, we deactivate the <code>fsync</code> option, which instructs PostgreSQL to do a <code>fsync()</code> call, whenever it writes something to disk, and increase the <code>checkpoint_segments</code> option, which instructs PostgreSQL to flush data in larger intervals.</p>
+
+<p>You can see what each option is for in the <a href="http://www.postgresql.org/docs/current/static/">manual of PostgreSQL</a>.</p>
+
+<p>With the above settings, the execution times are:</p>
+
+<pre><code>real    3m4.360s
+user    2m14.458s
+sys     0m3.360s
+</code></pre>
+
+<p>for the <em>projects</em> app and</p>
+
+<pre><code>real    6m49.579s
+user    4m49.101s
+sys     0m9.256s
+</code></pre>
+
+<p>for the <em>resources</em> app, which are comparable to the ones obtained, when using SQLite.</p>
+
+<p>The values chosen depend, of course, on the CPU and available memory you have. Additionally, some of the options (like <code>fsync</code>) should not be used in production.
+Keep also in mind that you will probably need to increase the maximum size of a shared memory segment with the command</p>
+
+<pre><code>sysctl -w kernel.shmmax=8589934592
+</code></pre>
+
+<p>in order to use the above settings (or add the new value in <code>/etc/sysctl.conf</code>).</p>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-env-files/">Using .env files</a></h2>
-        <div id=date>
-          <time>August 2016</time>
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/django-forms-models-and-dry/">Django, forms, models and DRY</a></h2>
-        <div id=date>
-          <time>November 2014</time>
-        </div>
-      </li>
+      <a class="basic-alignment left" href="https://mpessas.github.io/posts/transifex-optimize-download/">Optimizing the operation of downloading files in Transifex &raquo;</a>
     
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/exposing-objects-in-multiple-represenations/">Exposing objects in multiple represenations</a></h2>
-        <div id=date>
-          <time>February 2014</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-gettext-in-django/">Using gettext in Django</a></h2>
-        <div id=date>
-          <time>November 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/running-tests-in-memory-with-postgresql/">Running your Django tests in memory with PostgreSQL</a></h2>
-        <div id=date>
-          <time>October 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/forward-attribute-access-for-wrapper-classes/">Forward attribute access for wrapper classes</a></h2>
-        <div id=date>
-          <time>July 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/using-functions-in-update-queries-django/">Using functions in UPDATE queries from the Django ORM</a></h2>
-        <div id=date>
-          <time>April 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/transifex-optimize-download/">Optimizing the operation of downloading files in Transifex</a></h2>
-        <div id=date>
-          <time>February 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://mpessas.github.io/posts/testing-with-postgresql/">Testing with PostgreSQL</a></h2>
-        <div id=date>
-          <time>January 2012</time>
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 

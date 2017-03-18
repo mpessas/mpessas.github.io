@@ -42,6 +42,11 @@
   </url>
   
   <url>
+    <loc>https://mpessas.github.io/posts/testing-with-postgresql/</loc>
+    <lastmod>2012-01-06T11:30:08+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mpessas.github.io/posts/</loc>
     <lastmod>2016-08-13T10:25:01+02:00</lastmod>
     <priority>0</priority>
