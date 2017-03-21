@@ -19,10 +19,10 @@
     <title>
       
       
-         Using .env files 
+         Another reason to decouple your code from the models 
       
     </title>
-    <link rel="canonical" href="http://blog.bessas.me/posts/using-env-files/">
+    <link rel="canonical" href="http://blog.bessas.me/posts/another-reason-to-decouple-from-models/">
 
     <style>
   * {
@@ -392,26 +392,46 @@
 
 
 <section id=content>
-  <h1> Using .env files </h1>
+  <h1> Another reason to decouple your code from the models </h1>
 
   <div id=sub-header>
-    August 2016 · 1 minute read
+    March 2017 · 1 minute read
   </div>
 
   <div class="entry-content">
-    <p>Enabling the environment variables in a bash script:</p>
+    
 
-<pre><code>env $(cat .env.test | xargs)
-</code></pre>
+<p>As the application grows, the schema in the database will evolve as well, e.g.
+you will need new tables or add new columns to an existing table.</p>
+
+<p>One of the changes that may need to take place is editing the column, either the
+type or its size or even the type of data it contains.</p>
+
+<p>If you want to do the change without incurring any downtime, the best way to
+alter the column is to add a new column, migrate the data and then remove the
+old one. (That said, there are cases where a database will allow you to do the
+edit in-place without locking the table.)</p>
+
+<p>If you use an ORM though, this means that in general you cannot rely on the
+interface of the ORM-based class being stable.</p>
+
+<p>This is another reason to build a different layer for your domain objects, which
+can make the promise of a stable API and encapsulate the interfacing with the
+database behing a separate layer (<a href="https://martinfowler.com/eaaCatalog/repository.html">Repository
+pattern</a>).</p>
+
+<h2 id="sidebar">Sidebar</h2>
+
+<p>There are ways around this: adding a property in your ORM-based class with the
+old name and use that in the codebase. But this means you cannot still use the
+name in any queries - you have to refactor them.</p>
 
   </div>
 
   <div id=links>
     
-      <a class="basic-alignment left" href="http://blog.bessas.me/posts/django-forms-models-and-dry/">&laquo; Django, forms, models and DRY</a>
+      <a class="basic-alignment left" href="http://blog.bessas.me/posts/using-env-files/">&laquo; Using .env files</a>
     
-    
-      <a class="basic-alignment left" href="http://blog.bessas.me/posts/another-reason-to-decouple-from-models/">Another reason to decouple your code from the models &raquo;</a>
     
   </div>
 </section>

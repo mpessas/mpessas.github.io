@@ -6,8 +6,43 @@
     <description>Recent content in Posts on That&#39;s weird...</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 13 Aug 2016 10:25:01 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 21 Mar 2017 09:36:05 +0200</lastBuildDate>
     <atom:link href="http://blog.bessas.me/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Another reason to decouple your code from the models</title>
+      <link>http://blog.bessas.me/posts/another-reason-to-decouple-from-models/</link>
+      <pubDate>Tue, 21 Mar 2017 09:36:05 +0200</pubDate>
+      
+      <guid>http://blog.bessas.me/posts/another-reason-to-decouple-from-models/</guid>
+      <description>
+
+&lt;p&gt;As the application grows, the schema in the database will evolve as well, e.g.
+you will need new tables or add new columns to an existing table.&lt;/p&gt;
+
+&lt;p&gt;One of the changes that may need to take place is editing the column, either the
+type or its size or even the type of data it contains.&lt;/p&gt;
+
+&lt;p&gt;If you want to do the change without incurring any downtime, the best way to
+alter the column is to add a new column, migrate the data and then remove the
+old one. (That said, there are cases where a database will allow you to do the
+edit in-place without locking the table.)&lt;/p&gt;
+
+&lt;p&gt;If you use an ORM though, this means that in general you cannot rely on the
+interface of the ORM-based class being stable.&lt;/p&gt;
+
+&lt;p&gt;This is another reason to build a different layer for your domain objects, which
+can make the promise of a stable API and encapsulate the interfacing with the
+database behing a separate layer (&lt;a href=&#34;https://martinfowler.com/eaaCatalog/repository.html&#34;&gt;Repository
+pattern&lt;/a&gt;).&lt;/p&gt;
+
+&lt;h2 id=&#34;sidebar&#34;&gt;Sidebar&lt;/h2&gt;
+
+&lt;p&gt;There are ways around this: adding a property in your ORM-based class with the
+old name and use that in the codebase. But this means you cannot still use the
+name in any queries - you have to refactor them.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Using .env files</title>
@@ -904,35 +939,6 @@ for ip in $ips; do
 &lt;p&gt;Other database schema changes can be handled in similar ways.&lt;/p&gt;
 
 &lt;p&gt;In summary, we try to make the operation of adding the column as fast as possible, since this locks the table and blocks &lt;strong&gt;all&lt;/strong&gt; queries. Then, we enable the writes to the table, so that we can reach a consistent state. Only then do we enforce the constraints and add the necessary indexes. Finally, we start reading and fully utilizing the new column.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>On database schema changes</title>
-      <link>http://blog.bessas.me/posts/on-database-schema-changes/</link>
-      <pubDate>Sun, 09 Oct 2011 11:37:46 +0200</pubDate>
-      
-      <guid>http://blog.bessas.me/posts/on-database-schema-changes/</guid>
-      <description>&lt;p&gt;Working on a constantly evolving web application means that sooner or later you will have to change your database schema. One of the most difficult changes to make is to add a new column to a table.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s say you need to add a new column &lt;code&gt;ncol&lt;/code&gt; to an existing table &lt;code&gt;t&lt;/code&gt; in a database. The new column is of type &lt;code&gt;INT&lt;/code&gt;, it cannot take the &lt;code&gt;NULL&lt;/code&gt; value and defaults to the value &lt;code&gt;0&lt;/code&gt;. The SQL command to use is&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ALTER TABLE t ADD ncol INT DEFAULT 0 NOT NULL
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, the &lt;code&gt;ALTER TABLE&lt;/code&gt; command needs to acquire an &lt;a href=&#34;http://www.postgresql.org/docs/9.1/static/explicit-locking.html&#34;&gt;EXCLUSIVE LOCK&lt;/a&gt; to the whole table, before it attempts to execute itself. An exclusive lock is the most strict variant of locks in PostgreSQL (and other databases) and it conflicts with every other type of lock defined. So, executing an &lt;code&gt;ALTER TABLE&lt;/code&gt; command on a big table (think millions of rows and more) alongside other statements will block all those statements, even simple &lt;code&gt;SELECT&lt;/code&gt;s.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s say the &lt;code&gt;ALTER TABLE&lt;/code&gt; statement acquires the &lt;code&gt;EXCLUSIVE LOCK&lt;/code&gt; on the table. Since there is a transaction that has an &lt;code&gt;EXCLUSIVE LOCK&lt;/code&gt; on the table, every other transaction will block and wait for the first transaction to finish. The &lt;code&gt;ALTER TABLE&lt;/code&gt; statement will happily add the column &lt;code&gt;ncol&lt;/code&gt; to the table &lt;code&gt;t&lt;/code&gt;. That is, it will visit every row, add the new field and set its value to the default one provided.  This action, actually, will result in rewriting the table and its indexes, for it changes the structure of the table. This could take minutes, depending on the size of the table &lt;code&gt;t&lt;/code&gt;. Most live applications cannot afford that; if table &lt;code&gt;t&lt;/code&gt; is accessed constantly, clients that use that table would block waiting for the &lt;code&gt;ALTER TABLE&lt;/code&gt; statement to finish - the requests would probably time-out.&lt;/p&gt;
-
-&lt;p&gt;A way around the above problems is to break that &lt;code&gt;ALTER TABLE&lt;/code&gt; statement to separate, &amp;ldquo;lighter&amp;rdquo; steps. As the &lt;a href=&#34;http://www.postgresql.org/docs/9.1/static/sql-altertable.html&#34;&gt;docs&lt;/a&gt; say (section &lt;em&gt;Notes&lt;/em&gt;), setting the columns to &lt;code&gt;NULL&lt;/code&gt; by default will not require the heavy-weight operation of rewriting the whole table and the indexes. So, adding the above column can be done with the following group of statements:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ALTER TABLE t ADD ncol NULL
-ALTER TABLE t ALTER ncol SET DEFAULT 0
-UPDATE TABLE t SET ncol = 0
-ALTER TABLE t ALTER ncol SET NOT NULL
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The above group of statements has the same effect as the original statement. However, only the first one requires an &lt;code&gt;EXPLICIT LOCK&lt;/code&gt; on the table and that statement is executed very fast (think, milliseconds). As a result, any statement that might come and uses the locked table will only block for a tiny amount of time.&lt;/p&gt;
 </description>
     </item>
     
