@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-	<meta name="generator" content="Hugo 0.20" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="HandheldFriendly" content="True">
@@ -20,10 +19,10 @@
     <title>
       
       
-         That&#39;s weird... 
+         Assigning a unique ID to each request in Django 
       
     </title>
-    <link rel="canonical" href="http://blog.bessas.me/">
+    <link rel="canonical" href="http://blog.bessas.me/posts/request-ids-in-django/">
 
     <style>
   * {
@@ -379,8 +378,6 @@
 
 
     
-      <link href="http://blog.bessas.me/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
-    
   </head>
 
   <body>
@@ -395,149 +392,71 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Assigning a unique ID to each request in Django </h1>
+
+  <div id=sub-header>
+    April 2017 · 2 minute read
+  </div>
+
+  <div class="entry-content">
+    <p>It is a standard practice to assign a unique ID to every request, so that you
+can easily associate the log messages with their request and, thus, make
+debugging easier.</p>
+
+<p>You can do that in Django using a middleware. The middleware needs to define the
+<code>process_request</code> metho and generate the unique ID (e.g. using UUID) to
+associate with the request.</p>
+
+<p>One way to use this ID is to pass it as an argument down the call stack and use
+it in every log message. That approach, however, creates a dependency from the
+upper layer (HTTP layer) to the lower level layers (model or domain layer).
+Moreover, this approach requires that every function accepts the ID as an
+argument, which complicates the function signatures.</p>
+
+<p>An alternative is to use thread local variables. These variables are similar to
+global variables, but their scope is limited within the thread of execution.
+This way all logging code has access to the thread local variable (if defined).</p>
+
+<p>It should be noted, however, that these are global variables and so should be
+handled with care.</p>
+
+<p>It is useful, however, to use the same ID in celery tasks, so that you can trace
+the request in the celery workers log messages, as well. This can be achieved
+using celery&rsquo;s <code>before_task_publish_handler</code> signal (to add the ID to the task
+arguments) and <code>task_prerun_handler</code> signal (to read the ID from the task
+arguments and set the thread local variable).</p>
+
+<p>The final piece of the puzzle is creating log filters that read the thread local
+variables and make them available to the log message formatters automatically,
+e.g.</p>
+
+<pre><code>import logging
+from threading import local
+
+_locals = local()
+
+
+def get_current_identifier():
+    &quot;&quot;&quot;Get the current identifier of the request/task etc.&quot;&quot;&quot;
+    return getattr(_locals, 'identifier', u'')
+
+
+class ContextFilter(logging.Filter):
+    &quot;&quot;&quot;Add the request.user to the context of a log record.&quot;&quot;&quot;
+
+    def filter(self, record):
+        record.user_identifier = get_current_identifier()
+        return True
+</code></pre>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/request-ids-in-django/">Assigning a unique ID to each request in Django</a></h2>
-        <div id=date>
-          <time>April 2017</time>
-        </div>
-      </li>
+      <a class="basic-alignment left" href="http://blog.bessas.me/posts/pytest-and-migrations/">&laquo; Speeding up the Django database creation with pytest</a>
     
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/pytest-and-migrations/">Speeding up the Django database creation with pytest</a></h2>
-        <div id=date>
-          <time>April 2017</time>
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/another-reason-to-decouple-from-models/">Another reason to decouple your code from the models</a></h2>
-        <div id=date>
-          <time>March 2017</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/using-env-files/">Using .env files</a></h2>
-        <div id=date>
-          <time>August 2016</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/django-forms-models-and-dry/">Django, forms, models and DRY</a></h2>
-        <div id=date>
-          <time>November 2014</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/">Exposing objects in multiple represenations</a></h2>
-        <div id=date>
-          <time>February 2014</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/using-gettext-in-django/">Using gettext in Django</a></h2>
-        <div id=date>
-          <time>November 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/">Running your Django tests in memory with PostgreSQL</a></h2>
-        <div id=date>
-          <time>October 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/">Forward attribute access for wrapper classes</a></h2>
-        <div id=date>
-          <time>July 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/using-functions-in-update-queries-django/">Using functions in UPDATE queries from the Django ORM</a></h2>
-        <div id=date>
-          <time>April 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/transifex-optimize-download/">Optimizing the operation of downloading files in Transifex</a></h2>
-        <div id=date>
-          <time>February 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/testing-with-postgresql/">Testing with PostgreSQL</a></h2>
-        <div id=date>
-          <time>January 2012</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/timedrotatingfilehandler/">TimedRotatingFileHandler</a></h2>
-        <div id=date>
-          <time>December 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/russ-cox-regular-expressions/">Russ Cox&#39;s articles on regular expressions</a></h2>
-        <div id=date>
-          <time>December 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/distinct-in-sql/">DISTINCT in SQL</a></h2>
-        <div id=date>
-          <time>November 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/iptables-in-a-hurry/">iptables in a hurry</a></h2>
-        <div id=date>
-          <time>November 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/on-database-and-code-changes/">On database and code changes</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/on-database-schema-changes/">On database schema changes</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/on-reference-tables/">On reference tables</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/on-database-denormalization/">On database denormalization</a></h2>
-        <div id=date>
-          <time>September 2011</time>
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
@@ -550,5 +469,6 @@ ga('send', 'pageview');
 
 </body>
 </html>
+
 
 

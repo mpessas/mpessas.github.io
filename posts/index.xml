@@ -2,12 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on That&#39;s weird...</title>
-    <link>http://blog.bessas.me/posts/index.xml</link>
+    <link>http://blog.bessas.me/posts/</link>
     <description>Recent content in Posts on That&#39;s weird...</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 21 Mar 2017 09:36:05 +0200</lastBuildDate>
-    <atom:link href="http://blog.bessas.me/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 25 Apr 2017 10:55:11 +0300</lastBuildDate>
+    
+	<atom:link href="http://blog.bessas.me/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Assigning a unique ID to each request in Django</title>
+      <link>http://blog.bessas.me/posts/request-ids-in-django/</link>
+      <pubDate>Tue, 25 Apr 2017 10:55:11 +0300</pubDate>
+      
+      <guid>http://blog.bessas.me/posts/request-ids-in-django/</guid>
+      <description>It is a standard practice to assign a unique ID to every request, so that you can easily associate the log messages with their request and, thus, make debugging easier.
+You can do that in Django using a middleware. The middleware needs to define the process_request metho and generate the unique ID (e.g. using UUID) to associate with the request.
+One way to use this ID is to pass it as an argument down the call stack and use it in every log message.</description>
+    </item>
+    
+    <item>
+      <title>Speeding up the Django database creation with pytest</title>
+      <link>http://blog.bessas.me/posts/pytest-and-migrations/</link>
+      <pubDate>Tue, 25 Apr 2017 07:48:22 +0300</pubDate>
+      
+      <guid>http://blog.bessas.me/posts/pytest-and-migrations/</guid>
+      <description>The standard way to set up the database for running your Django test suite is to run the the projects migrations from scratch.
+This can be quite slow, though, when there are many migrations. For this reason, pytest-django provides an option to keep the database between runs, so as to avoid this cost every time (--reuse-db option).
+However, one still has to create the database every now and then from scratch, e.</description>
+    </item>
     
     <item>
       <title>Another reason to decouple your code from the models</title>
@@ -15,33 +39,9 @@
       <pubDate>Tue, 21 Mar 2017 09:36:05 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/another-reason-to-decouple-from-models/</guid>
-      <description>
-
-&lt;p&gt;As the application grows, the schema in the database will evolve as well, e.g.
-you will need new tables or add new columns to an existing table.&lt;/p&gt;
-
-&lt;p&gt;One of the changes that may need to take place is editing the column, either the
-type or its size or even the type of data it contains.&lt;/p&gt;
-
-&lt;p&gt;If you want to do the change without incurring any downtime, the best way to
-alter the column is to add a new column, migrate the data and then remove the
-old one. (That said, there are cases where a database will allow you to do the
-edit in-place without locking the table.)&lt;/p&gt;
-
-&lt;p&gt;If you use an ORM though, this means that in general you cannot rely on the
-interface of the ORM-based class being stable.&lt;/p&gt;
-
-&lt;p&gt;This is another reason to build a different layer for your domain objects, which
-can make the promise of a stable API and encapsulate the interfacing with the
-database behing a separate layer (&lt;a href=&#34;https://martinfowler.com/eaaCatalog/repository.html&#34;&gt;Repository
-pattern&lt;/a&gt;).&lt;/p&gt;
-
-&lt;h2 id=&#34;sidebar&#34;&gt;Sidebar&lt;/h2&gt;
-
-&lt;p&gt;There are ways around this: adding a property in your ORM-based class with the
-old name and use that in the codebase. But this means you cannot still use the
-name in any queries - you have to refactor them.&lt;/p&gt;
-</description>
+      <description>As the application grows, the schema in the database will evolve as well, e.g. you will need new tables or add new columns to an existing table.
+One of the changes that may need to take place is editing the column, either the type or its size or even the type of data it contains.
+If you want to do the change without incurring any downtime, the best way to alter the column is to add a new column, migrate the data and then remove the old one.</description>
     </item>
     
     <item>
@@ -50,11 +50,8 @@ name in any queries - you have to refactor them.&lt;/p&gt;
       <pubDate>Sat, 13 Aug 2016 10:25:01 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/using-env-files/</guid>
-      <description>&lt;p&gt;Enabling the environment variables in a bash script:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;env $(cat .env.test | xargs)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>Enabling the environment variables in a bash script:
+env $(cat .env.test | xargs)  </description>
     </item>
     
     <item>
@@ -63,65 +60,9 @@ name in any queries - you have to refactor them.&lt;/p&gt;
       <pubDate>Sun, 23 Nov 2014 09:42:37 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/django-forms-models-and-dry/</guid>
-      <description>&lt;p&gt;Django provides a &lt;code&gt;forms&lt;/code&gt; package to make working with forms in web applications easier.&lt;/p&gt;
-
-&lt;p&gt;Forms work by subclassing the &lt;code&gt;Form&lt;/code&gt; class and defining the fields in the class:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyForm(forms.Form):
-    field1 = forms.CharField(max_length=10)
-    field2 = forms.IntegerField()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;But in most cases a form mirrors a model in the database, where you have already
-declared the properties for those fields. For this use case, Django provides
-&lt;code&gt;ModelForm&lt;/code&gt; to use as a base class.&lt;/p&gt;
-
-&lt;p&gt;As an example, if you had the following model:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyModel(models.Model):
-    field1 = models.CharField(max_length=10)
-    field2 = models.IntegerField()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;you could declare a form for it:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyModelForm(forms.ModelForm):
-    class Meta:
-        model = MyModel
-        fields = (&#39;field1&#39;, &#39;field2&#39;, )
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;There are cases, however, where your form does not correspond to just one model
-or the mapping is not very clear. For instance, you provide an API for your web
-application, which must be stable no matter how the models change, and have some
-complex validation that spans across models. Keep in mind that at the end of the
-day &lt;a href=&#34;http://www.pydanny.com/core-concepts-django-forms.html#forms-validate-dictionaries&#34;&gt;forms validate dictionaries&lt;/a&gt; and they are pretty good at it, so why not
-use them for validation in general?&lt;/p&gt;
-
-&lt;p&gt;In this case, you could create the form by hand, but that is not very DRY; you
-would have to edit validation in two places, whenever a change is needed.&lt;/p&gt;
-
-&lt;p&gt;A better approach is to do what Django already does in order to construct a
-&lt;code&gt;ModelForm&lt;/code&gt;. Every field in a model has a method called &lt;a href=&#34;https://github.com/django/django/blob/bcb693ebd4d3743cb194c6fd05b2d70fb9696a4c/django/db/models/fields/__init__.py#L809&#34;&gt;&lt;code&gt;formfield&lt;/code&gt;&lt;/a&gt;, which
-constructs a &lt;code&gt;forms.Field&lt;/code&gt; instance that corresponds to itself: it has the
-correct type and correct arguments in place, which you can also override.&lt;/p&gt;
-
-&lt;p&gt;The following function allows you to create a &lt;code&gt;forms.Field&lt;/code&gt; this way.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;def construct_form_field(model, field_name, **kwargs):
-    app_name, model_name = model.split(&#39;.&#39;, 1)
-    Model = get_model(app_name, model_name)
-    field = Model._meta.get_field_by_name(field_name)[0]
-    return field.formfield(**kwargs)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can use this function then in a form to define the fields you need:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyForm(forms.Form):
-    field1 = construct_form_field(&#39;app.Model1&#39;, &#39;field1&#39;)
-    field2 = construct_form_field(&#39;app.Model2&#39;, &#39;field2&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>Django provides a forms package to make working with forms in web applications easier.
+Forms work by subclassing the Form class and defining the fields in the class:
+class MyForm(forms.Form): field1 = forms.CharField(max_length=10) field2 = forms.IntegerField()  But in most cases a form mirrors a model in the database, where you have already declared the properties for those fields. For this use case, Django provides ModelForm to use as a base class.</description>
     </item>
     
     <item>
@@ -130,189 +71,8 @@ correct type and correct arguments in place, which you can also override.&lt;/p&
       <pubDate>Tue, 11 Feb 2014 11:11:02 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/</guid>
-      <description>
-
-&lt;h2 id=&#34;the-need-for-multiple-representations&#34;&gt;The need for multiple representations&lt;/h2&gt;
-
-&lt;p&gt;Many applications have multiple interfaces: an API that others use to access the
-application programmatically or a rich web client built with JavaScript for the
-end-users and so on.&lt;/p&gt;
-
-&lt;p&gt;The needs of each interface may be different, though. The API, for
-instance, may need to expose all details of a specific object, but the web
-interface only needs certain details and maybe some extra attributes.&lt;/p&gt;
-
-&lt;p&gt;This means that the objects living in the business core need to be exposed to
-multiple clients in different ways. How can you achieve this efficiently?&lt;/p&gt;
-
-&lt;p&gt;The following examples will use Django, but the same principles apply in
-general.&lt;/p&gt;
-
-&lt;p&gt;We will also use a &lt;code&gt;User&lt;/code&gt; object as an example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class User(object):
-
-    def __init__(self, username, password, email, firstname, lastname):
-        self.username = username
-        self.password = password
-        self.email = email
-        self.firstname = firstname
-        self.lastname = lastname
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This is not a Django model, since you can also have plain python classes for
-your business logic.&lt;/p&gt;
-
-&lt;h2 id=&#34;solutions-that-don-t-scale-putting-the-code-in-the-view&#34;&gt;Solutions that don&amp;rsquo;t scale: Putting the code in the view&lt;/h2&gt;
-
-&lt;p&gt;The first thing that usually comes to mind is to do the necessary transformation
-in the view that exposes the object.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import json
-from django.http import HttpResponse
-
-def user_details(request, username):
-    # Fetch the user from the database.
-    user = fetch_user(username=username)
-    user_dict = {}
-    for attr in [username, email, firstname, lastname]:
-        user_dict[attr] = getattr(user, attr)
-    return HttpResponse(
-        json.dumps(user_dict), content_type=&amp;quot;application/json&amp;quot;
-    )
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A similar approach would be followed in the API views as well.&lt;/p&gt;
-
-&lt;p&gt;This approach leads, however, to &lt;strong&gt;duplicated code&lt;/strong&gt;: every time you need to
-serialize a &lt;code&gt;User&lt;/code&gt; object you need to follow the exactly same process and have
-the exactly same code.&lt;/p&gt;
-
-&lt;p&gt;Until you don&amp;rsquo;t; a use-case will come up where you need a different
-representation. As an example, you might need in a view to expose the number of
-photos a &lt;code&gt;User&lt;/code&gt; might have as well:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;def user_details_with_photos(request, username):
-    # Fetch the user from the database.
-    user = fetch_user(username=username)
-    user_dict = {}
-    for attr in [username, email, firstname, lastname]:
-        user_dict[attr] = getattr(user, attr)
-    user_dict[&amp;quot;nphotos&amp;quot;] = user.nphotos()
-    return HttpResponse(
-        json.dumps(user_dict), content_type=&amp;quot;application/json&amp;quot;
-    )
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which is the same code as before with just one extra line.&lt;/p&gt;
-
-&lt;p&gt;As a result, the next time you have to change something, you have to make the
-change in many places, hoping you do not forget one, making this approach
-&lt;strong&gt;error-prone&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;These are all well-known drawbacks of putting logic in the views.&lt;/p&gt;
-
-&lt;h2 id=&#34;solutions-that-don-t-scale-putting-the-code-in-the-object&#34;&gt;Solutions that don&amp;rsquo;t scale: Putting the code in the object&lt;/h2&gt;
-
-&lt;p&gt;The next approach is to create a &lt;strong&gt;fat model&lt;/strong&gt; and keep the view &lt;strong&gt;skinny&lt;/strong&gt;.
-That is, we move the code that generates the representation of the &lt;code&gt;User&lt;/code&gt; object
-in the &lt;code&gt;User&lt;/code&gt; class itself:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class User(object):
-    ...
-
-    def to_dict(self):
-        result = {}
-        for attr in [username, email, firstname, lastname]:
-            result[attr] = getattr(self, attr)
-        return result
-
-    def to_dict_with_photos(self):
-        result = self.to_dict()
-        result[&amp;quot;nphotos&amp;quot;] = user.nphotos()
-        return result
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The corresponding views become:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;def user_details(request, username):
-    user = fetch_user(username=username)
-    return HttpResponse(
-        json.dumps(user.to_dict()),
-        content_type=&amp;quot;application/json&amp;quot;
-    )
-
-
-def user_details_with_photos(request, username):
-    user = fetch_user(username=username)
-    return HttpResponse(
-        json.dumps(user.to_dict_with_photos()),
-        content_type=&amp;quot;application/json&amp;quot;
-    )
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This solves the problem of &lt;strong&gt;code reuse&lt;/strong&gt; nicely. Every way to represent the
-&lt;code&gt;User&lt;/code&gt; object is in one place, in the &lt;code&gt;User&lt;/code&gt; class, and the code in the views
-becomes simpler. Furthermore, tests become much simpler to write: you need to
-test the two methods that convert a &lt;code&gt;User&lt;/code&gt; object to a dictionary, instead of
-testing the views directly. Thus, the tests become faster as well,since they do
-not have to go through the HTTP stack.&lt;/p&gt;
-
-&lt;p&gt;However, the &lt;code&gt;User&lt;/code&gt; class has become quite large this way. In addition to the
-functionality it must support for a user instance, the class also has many
-methods to generate all necessary transformations.&lt;/p&gt;
-
-&lt;p&gt;In other words, this approach violates the
-&lt;a href=&#34;http://en.wikipedia.org/wiki/Single_responsibility_principle&#34;&gt;&lt;strong&gt;Single Responsibility Principle&lt;/strong&gt;&lt;/a&gt;. The &lt;code&gt;User&lt;/code&gt; class has two
-responsibilities, one to support the necessary functionality of a &lt;code&gt;User&lt;/code&gt; object
-and one to represent the object in multiple ways. The &lt;code&gt;User&lt;/code&gt; class becomes this
-way harder to understand and more fragile.&lt;/p&gt;
-
-&lt;h2 id=&#34;moving-the-logic-for-the-representations-to-separate-processes&#34;&gt;Moving the logic for the representations to separate processes&lt;/h2&gt;
-
-&lt;p&gt;The solution to this problem is to extract the responsibility of generating a
-representation of a &lt;code&gt;User&lt;/code&gt; instance to a separate function or class.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class UserRepresentations(object):
-
-    @classmethod
-    def to_dict(cls, user):
-        result = {}
-        for attr in [username, email, firstname, lastname]:
-            result[attr] = getattr(user, attr)
-        return result
-
-    @classmethod
-    def to_dict_with_photos(cls, user):
-        result = cls.to_dict(user)
-        result[&amp;quot;nphotos&amp;quot;] = user.nphotos()
-        return result
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As an added benefit, these representations can be unit-tested in isolation,
-without any dependency on the business objects (and perhaps the database).&lt;/p&gt;
-
-&lt;p&gt;The views now become:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;def user_details(request, username):
-    user = fetch_user(username=username)
-    user_dict = UserRepresentations.to_dict(user)
-    return HttpResponse(
-        json.dumps(user_dict), content_type=&amp;quot;application/json&amp;quot;
-    )
-
-
-def user_details_with_photos(request, username):
-    user = fetch_user(username=username)
-    user_dict = UserRepresentations.to_dict_with_photos(user)
-    return HttpResponse(
-        json.dumps(user_dict), content_type=&amp;quot;application/json&amp;quot;
-    )
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The result is a clear separation of concerns; that is, a cleaner codebase and of
-higher quality.&lt;/p&gt;
-</description>
+      <description>The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
+The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes.</description>
     </item>
     
     <item>
@@ -321,131 +81,8 @@ higher quality.&lt;/p&gt;
       <pubDate>Sat, 02 Nov 2013 11:20:24 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/using-gettext-in-django/</guid>
-      <description>
-
-&lt;p&gt;Internationalization (i18n) is the process of enabling your software to be
-translated to other languages. This is done by making the software able to map
-all user-visible strings to their translations in a specific language and use
-them, when appropriate.&lt;/p&gt;
-
-&lt;p&gt;The i18n toolset django uses is &lt;strong&gt;gettext&lt;/strong&gt; and is enabled with the &lt;code&gt;USE_I18N&lt;/code&gt;
-setting. Gettext works as follows: First, the developer marks the &lt;strong&gt;translation
-strings&lt;/strong&gt; in the source code and then he runs the &lt;code&gt;xgettext&lt;/code&gt; command to create
-the source PO file. The &lt;code&gt;xgettext&lt;/code&gt; command analyzes the source code to locate
-the strings that were marked as translation strings and
-extracts them into a PO file, which can be translated to the target languages.
-The last step is to &lt;em&gt;compile&lt;/em&gt; the PO files into binary message files (.mo files) with
-the &lt;code&gt;msgfmt&lt;/code&gt; command.&lt;/p&gt;
-
-&lt;p&gt;Django makes sure to ease the process by providing its own management commands:
-&lt;code&gt;makemessages&lt;/code&gt; that extracts the strings from the source code and
-&lt;code&gt;compilemessages&lt;/code&gt; that converts the files into the binary ones. It also expects to find the PO files for a language under the directory
-&lt;code&gt;locale/&amp;lt;locale&amp;gt;/LC_MESSAGES/django.po&lt;/code&gt;, where &lt;code&gt;&amp;lt;locale&amp;gt;&lt;/code&gt; is the language code.&lt;/p&gt;
-
-&lt;p&gt;In the runtime, whenever a gettext function is used, it will use the PO file
-that corresponds to the currently active locale and return the correct
-translation that corresponds to this string. If no translation is found, the
-original string is used instead.&lt;/p&gt;
-
-&lt;h2 id=&#34;the-gettext-functions&#34;&gt;The gettext functions&lt;/h2&gt;
-
-&lt;p&gt;The following is a list of the most important gettext functions that django
-exposes and can support unicode strings correctly. Keep in mind that they all
-mark the containing &lt;em&gt;literal string&lt;/em&gt; as translatable, that is, you need to pass
-the string itself as an argument, not a variable.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ugettext&lt;/code&gt;: The function returns the   translation for the currently selected language.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ugettext_lazy&lt;/code&gt;: The function marks the string as translation string, but only
-fetches the translated string, when it is used in a string context, such as
-when rendering a template.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ugettext_noop&lt;/code&gt;: This function only marks a string as translation string, it
-does not have any other effect; that is, it always returns the string itself.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The &lt;code&gt;ugettext_lazy&lt;/code&gt; function is useful in cases, where a string needs to be
-marked as translation string, but the user&amp;rsquo;s locale is not active yet. For
-instance, all strings in a model or in the settings are loaded, when the django
-process is started. During startup, there is no user request that sets the
-active locale. By using the &lt;code&gt;ugettext_lazy&lt;/code&gt; function, you ensure that the
-translations will be actually fetched only during a user request, when the locale is known.&lt;/p&gt;
-
-&lt;p&gt;Given the &lt;code&gt;ugettext_lazy&lt;/code&gt; function, the &lt;code&gt;ugettext_noop&lt;/code&gt; function seems to be
-redundant. However, it is really useful in cases that you want to mark a string
-as translation string, but need to use it in other contexts in its original form
-as well, such as an error message that has to be logged, too. For instance, take
-the following view that returns an error message to the user (it is a standard practice to import the gettext functions as &amp;ldquo;&lt;code&gt;_&lt;/code&gt;&amp;rdquo;):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import logging
-from django.http import HttpResponse
-from django.utils.translation import ugettext as _
-
-def view(request):
-    msg = _(&amp;quot;An error has occurred&amp;quot;)
-    logging.error(msg)
-    return HttpResponse(msg)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The response will contain the translated error message, but so will the logs. In
-order to circumvent this issue, you can use the &lt;code&gt;ugettext_noop&lt;/code&gt; function
-instead:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import logging
-from django.http import HttpResponse
-from django.utils.translation import ugettext as _, ugettext_noop as _noop
-
-def view(request):
-    msg = _noop(&amp;quot;An error has occurred&amp;quot;)
-    logging.error(msg)
-    return HttpResponse(_(msg))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;ugettext_noop&lt;/code&gt; will force gettext to mark the error message as translation
-string, but it will return the original (English) string. As a result, the log
-messages will use the English phrase. However, we still want to present the
-translated message to the user. We achieve this by using the &lt;code&gt;ugettext&lt;/code&gt; function
-to force evaluating the string and fetching the translated message. This
-technique is especially useful for exception messages, that need to be logged in
-a higher layer of the codebase but also presented to the user.&lt;/p&gt;
-
-&lt;h2 id=&#34;plural-support&#34;&gt;Plural support&lt;/h2&gt;
-
-&lt;p&gt;Most languages have two &lt;strong&gt;plural forms&lt;/strong&gt;: singular and plural. Some languages,
-however, have only one, like Japanese. Others can have up to six, like Arabic.&lt;/p&gt;
-
-&lt;p&gt;Which plural  form to use  depends on the number of objects the phrase refers to.  For instance, English  uses the
-singular  form, when  the phrase  refers  to one  object (&amp;ldquo;1  language&amp;rdquo;), and  the
-plural, when it refers to none (&amp;ldquo;no languages&amp;rdquo;) or more than one (&amp;ldquo;2 languages&amp;rdquo;). Other languages have different rules.&lt;/p&gt;
-
-&lt;p&gt;Django supports plurals with the &lt;code&gt;n&lt;/code&gt; family of gettext functions: &lt;code&gt;ungettext&lt;/code&gt;
-and &lt;code&gt;ungettext_lazy&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;context-support&#34;&gt;Context support&lt;/h2&gt;
-
-&lt;p&gt;Gettext allows developers to define the &lt;strong&gt;context&lt;/strong&gt; of a string. For instance,
-the word &amp;ldquo;Read&amp;rdquo; can mean &amp;ldquo;read an email&amp;rdquo; or &amp;ldquo;emails read&amp;rdquo;. The developer can
-define and explain the context of a string to differentiate between the two uses. This way, gettext will create
-separate entries for the word &amp;ldquo;read&amp;rdquo;, one for each context.&lt;/p&gt;
-
-&lt;p&gt;This is supported in django with the &lt;code&gt;p&lt;/code&gt; family of gettext functions:
-&lt;code&gt;pgettext&lt;/code&gt;, &lt;code&gt;pgettext_lazy&lt;/code&gt;, &lt;code&gt;npgettext&lt;/code&gt; and &lt;code&gt;npgettext_lazy&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;support-in-templates&#34;&gt;Support in templates&lt;/h2&gt;
-
-&lt;p&gt;Django provides two &lt;em&gt;templatetags&lt;/em&gt; for marking translation strings in templates:
-&lt;code&gt;trans&lt;/code&gt; and &lt;code&gt;blocktrans&lt;/code&gt;. The main difference is that the &lt;code&gt;trans&lt;/code&gt; templatetag
-only supports simple strings, while the &lt;code&gt;blocktrans&lt;/code&gt; templatetag supports
-variable substitution (placeholders) as well.&lt;/p&gt;
-
-&lt;p&gt;Both templatetags support most of the gettext features. One thing to keep in
-mind for the &lt;code&gt;blocktrans&lt;/code&gt; templatetag, though, is that the containing string is
-extracted as is. This means that the string will be extracted by gettext with
-any newline and space characters or indentation it might have. For this reason,
-all indentation should be avoided.&lt;/p&gt;
-
-&lt;p&gt;More details for how to internationalize your web application can be found at
-&lt;a href=&#34;https://docs.djangoproject.com/en/dev/topics/i18n/translation/&#34;&gt;django&amp;rsquo;s documentation&lt;/a&gt;.&lt;/p&gt;
-</description>
+      <description>Internationalization (i18n) is the process of enabling your software to be translated to other languages. This is done by making the software able to map all user-visible strings to their translations in a specific language and use them, when appropriate.
+The i18n toolset django uses is gettext and is enabled with the USE_I18N setting. Gettext works as follows: First, the developer marks the translation strings in the source code and then he runs the xgettext command to create the source PO file.</description>
     </item>
     
     <item>
@@ -454,44 +91,8 @@ all indentation should be avoided.&lt;/p&gt;
       <pubDate>Sat, 19 Oct 2013 11:22:45 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/</guid>
-      <description>&lt;p&gt;Many people advise to use sqlite for running your tests in django. The reason is
-that Django will automatically create the database &lt;a href=&#34;http://www.sqlite.org/inmemorydb.html&#34;&gt;in-memory&lt;/a&gt;, which speeds up
-any tests that query the database.&lt;/p&gt;
-
-&lt;p&gt;However, this means that your test database is different than your production
-one, which might cause issues because of the differences between the databases,
-such as how they handle transactions. Besides, you might be using
-&lt;a href=&#34;https://github.com/mpessas/django-pg-extensions&#34;&gt;features of PostgreSQL&lt;/a&gt; that sqlite does not support.&lt;/p&gt;
-
-&lt;p&gt;There are ways to make &lt;a href=&#34;http://mpessas.tumblr.com/post/15402128609/testing-with-postgresql&#34;&gt;PostgreSQL much faster for running your tests&lt;/a&gt;, but
-why not run your database in-memory as well and avoid any I/O operations?&lt;/p&gt;
-
-&lt;p&gt;This is possible in linux by using a ramdisk for your test database.&lt;/p&gt;
-
-&lt;p&gt;First, you need to create the ramdisk:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo mount -t ramfs none /mnt/
-sudo mkdir /mnt/pgdata/
-sudo chown postgres:postgres /mnt/pgdata/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then, you need to create a &lt;a href=&#34;http://www.postgresql.org/docs/9.2/static/manage-ag-tablespaces.html&#34;&gt;tablespace&lt;/a&gt; that uses the ramdisk:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;psql -d postgres -c &amp;quot;CREATE TABLESPACE ramfs LOCATION &#39;/mnt/pgdata&#39;&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The last step is to instruct django to use this tablespace for the test
-database. This can be done by adding the following to your settings:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;if &#39;test&#39; in sys.argv:
-    DEFAULT_TABLESPACE = &#39;ramfs&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will help reducing the running time of your test suite a bit more.&lt;/p&gt;
-
-&lt;p&gt;Keep in mind you might have to drop the tablespace and re-create it after a
-reboot.&lt;/p&gt;
-</description>
+      <description>Many people advise to use sqlite for running your tests in django. The reason is that Django will automatically create the database in-memory, which speeds up any tests that query the database.
+However, this means that your test database is different than your production one, which might cause issues because of the differences between the databases, such as how they handle transactions. Besides, you might be using features of PostgreSQL that sqlite does not support.</description>
     </item>
     
     <item>
@@ -500,80 +101,8 @@ reboot.&lt;/p&gt;
       <pubDate>Thu, 11 Jul 2013 11:24:31 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/</guid>
-      <description>&lt;p&gt;Let&amp;rsquo;s say you want to create a wrapper class around a Django model. For convenience, you want your wrapper class to forward any direct field access calls to the model it wraps. That is, you want the following code to work:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyModel(models.Model):
-    slug = models.SlugField()
-
-class Wrapper(object):
-    model = MyModel
-
-    def __init__(self, w):
-        self.w = w
-
-w = MyModel(slug=&#39;slug&#39;)
-w = Wrapper(w)
-print w.slug
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This boils down to dynamically adding properties to the &lt;code&gt;Wrapper&lt;/code&gt; class that forward the call to and return the value from the wrapped instance.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s also say that you want to create a base &lt;code&gt;Wrapper&lt;/code&gt; class which can be used for all wrapper classes around your models.&lt;/p&gt;
-
-&lt;p&gt;One way to do it would be to use the &lt;code&gt;__getattr__&lt;/code&gt; function. Keep in mind we are only interested in responding to calls to fields, not every attribute of the model instance.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class Wrapper(object):
-
-    def __init__(self, queryset):
-        self.qs = queryset
-        self._qs_field_names = [f.name for f in self.qs._meta.fields]
-
-    def __getattr__(self, name):
-        if name in self._qs_field_names:
-            return getattr(self.qs, name)
-        return super(Wrapper, self).__getattr__(name)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, this means that all subclasses that want to override &lt;code&gt;__getattr__&lt;/code&gt; will have to remember to call &lt;code&gt;super&lt;/code&gt; as well. This approach works well; on the other hand, it puts an extra burden to developers: they have to know the internals of the parent class whenever they need to override an internal function like &lt;code&gt;__getattr__&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The other way is to use &lt;em&gt;metaclasses&lt;/em&gt; and override the &lt;code&gt;__new__&lt;/code&gt; method:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;def name_getter(obj, name):
-    &amp;quot;&amp;quot;&amp;quot;Closure to creatre a function that operates on the given name.&amp;quot;&amp;quot;&amp;quot;
-    def getter(obj):
-        return getattr(obj.qs, name)
-    return getter
-
-class WrapperMeta(type):
-
-    def __new__(meta, name, bases, dct):
-        cls = super(ServiceMeta, meta).__new__(meta, name, bases, dct)
-        if cls.model is not None:  # Ignore base class case
-            for f in cls.model._meta.fields:
-                setattr(cls, f.name, property(name_getter(cls, f.name)))
-        return cls
-
-class Wrapper(object):
-    __metaclass__ = WrapperMeta
-    model = None
-
-    def __init__(self, queryset):
-        self.qs = queryset
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;First, the &lt;code&gt;WrapperMeta&lt;/code&gt; metaclass overrides the &lt;code&gt;__new__&lt;/code&gt; method, so that it will automatically add a &lt;code&gt;property&lt;/code&gt; to the &lt;em&gt;derived&lt;/em&gt; classes for each field in the base class.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;property&lt;/code&gt; function takes as (first) argument a function that takes one argument (the object, i.e., &lt;code&gt;self&lt;/code&gt;) and returns a value. Since we create those properties dynamically for every attribute, we need to create a function that remembers the name of the attribute any specific property handles. Thus, we use a closure, &lt;code&gt;name_getter&lt;/code&gt;. The &lt;code&gt;name_getter&lt;/code&gt; function stores the name &lt;code&gt;name&lt;/code&gt; of the attribute we want to access and returns a function that, given an object, will return the value of its attribute named &lt;code&gt;name&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;This allows us to create simple wrapper classes for a django model:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyWrapper(Wrapper):
-    model = MyModel
-
-w = MyWrapper(MyModel(slug=&#39;slug&#39;))
-print w.slug
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>Let&amp;rsquo;s say you want to create a wrapper class around a Django model. For convenience, you want your wrapper class to forward any direct field access calls to the model it wraps. That is, you want the following code to work:
+class MyModel(models.Model): slug = models.SlugField() class Wrapper(object): model = MyModel def __init__(self, w): self.w = w w = MyModel(slug=&#39;slug&#39;) w = Wrapper(w) print w.slug  This boils down to dynamically adding properties to the Wrapper class that forward the call to and return the value from the wrapped instance.</description>
     </item>
     
     <item>
@@ -582,35 +111,8 @@ print w.slug
       <pubDate>Sat, 06 Apr 2013 11:26:49 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/using-functions-in-update-queries-django/</guid>
-      <description>&lt;p&gt;PostgreSQL is a great database and comes with many great and really useful features, one of which is arrays. There are various apps that add support for arrays in the Django ORM, like &lt;a href=&#34;https://github.com/ecometrica/django-dbarray&#34;&gt;django-dbarray&lt;/a&gt;, &lt;a href=&#34;https://github.com/niwibe/djorm-ext-pgarray&#34;&gt;djorm-ext-pgarray&lt;/a&gt; and &lt;a href=&#34;https://github.com/mpessas/django-pg-extensions&#34;&gt;django-pg-extensions&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;However, those packages provide only fields that represent a PostgreSQL array (and maybe support for some of the operators), but not for the &lt;a href=&#34;http://www.postgresql.org/docs/9.2/static/functions-array.html&#34;&gt;functions&lt;/a&gt; that PostgreSQL provides to manipulate arrays. Some of those functions are really useful, like adding elements to an array.&lt;/p&gt;
-
-&lt;p&gt;For instance, if you choose to use arrays to represent tags for an entity, how do you add new tags to a set of entities? In other words, how do you use the PosetgreSQL functions with the &lt;code&gt;.update()&lt;/code&gt; QuerySet API?&lt;/p&gt;
-
-&lt;p&gt;Django ORM provides a feature to allow developers control the SQL generated in some of the queries; if the argument is an object with a &lt;code&gt;.as_sql()&lt;/code&gt; method, django will &lt;a href=&#34;https://github.com/django/django/blob/master/django/db/models/sql/compiler.py#L932&#34;&gt;use that&lt;/a&gt; to construct the SQL for the query. The &lt;code&gt;as_sql&lt;/code&gt; method needs to return the SQL string and a list of the parameters used in the SQL — it is important to avoid embedding the parameters in the SQL query, so that they can be correctly escaped, before being executed.&lt;/p&gt;
-
-&lt;p&gt;As an example, the following class generates the SQL to append a value to an array.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class AppendToArray(object):
-
-     def __init__(self, column, value):
-         self.column = column
-         self.value = value
-
-     def as_sql(self):
-          return &amp;quot;array_append(%s, %%s)&amp;quot; % self.column, [self.value]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you wanted to use it in a &lt;code&gt;QuerySet&lt;/code&gt; method, you could have something like&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyQuerySet(models.QuerySet):
-
-     def add_element(self, element):
-         value = AppendToArray(&amp;quot;column_name&amp;quot;, element)
-         return self.update(column=value)
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>PostgreSQL is a great database and comes with many great and really useful features, one of which is arrays. There are various apps that add support for arrays in the Django ORM, like django-dbarray, djorm-ext-pgarray and django-pg-extensions.
+However, those packages provide only fields that represent a PostgreSQL array (and maybe support for some of the operators), but not for the functions that PostgreSQL provides to manipulate arrays. Some of those functions are really useful, like adding elements to an array.</description>
     </item>
     
     <item>
@@ -619,115 +121,9 @@ print w.slug
       <pubDate>Sat, 02 Feb 2013 11:28:43 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/transifex-optimize-download/</guid>
-      <description>
-
-&lt;p&gt;This is the story of taking a 80 seconds operation down to 2 seconds.&lt;/p&gt;
-
-&lt;p&gt;One of the most common operations in Transifex is downloading a
-translation file (the second is uploading one). Since files are downloaded all the time, the process should be as fast as possible.&lt;/p&gt;
-
-&lt;p&gt;Some projects, however, have files with thousands of entries, which
-presented us with some challenges: download times could take a lot of seconds depending on the size of the file — an issue for both our users and our servers :).&lt;/p&gt;
-
-&lt;p&gt;So, about a year back we had to take a good look at the process.&lt;/p&gt;
-
-&lt;h4 id=&#34;exporting-a-file&#34;&gt;Exporting a file&lt;/h4&gt;
-
-&lt;p&gt;The process of exporting a file is straightforward.&lt;/p&gt;
-
-&lt;p&gt;First, we fetch the &lt;em&gt;source strings&lt;/em&gt; (the strings of the source language),  the &lt;em&gt;template file&lt;/em&gt; of the resource and the corresponding &lt;em&gt;translation strings&lt;/em&gt; in the specified language. If an entry has not been translated yet, we use the empty string as the translation.&lt;/p&gt;
-
-&lt;p&gt;The template file is almost the same with the source file (e.g. the
-original PO file) of the resource, except that all translation strings have been replaced with a md5 hash that uniquely identifies the source string.&lt;/p&gt;
-
-&lt;p&gt;So, given the md5 hash, we can tell which source string the entry in
-the template is for and which is the corresponding translation
-string.&lt;/p&gt;
-
-&lt;p&gt;More details on the internals of the storage engine can be found in
-the
-&lt;a href=&#34;http://help.transifex.com/features/formats.html#the-transifex-translation-storage-engine&#34;&gt;documentation&lt;/a&gt; of Transifex.&lt;/p&gt;
-
-&lt;h4 id=&#34;original-algorithm&#34;&gt;Original algorithm&lt;/h4&gt;
-
-&lt;p&gt;The algorithm (&lt;em&gt;compilation process&lt;/em&gt;) would iterate over all
-translation strings and use a regular expression to locate the hash
-that corresponded to that string in the template file. Then, it would replace it with the actual translation string. The result was the translation file the user requested:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;source_strings = fetch_source_strings_from_db()
-translations = fetch_translations_from_db()
-for string in source_strings:
-    translation = get_translation_for_source(translations, string)
-    regex_replace(string.hash, translation, template)
-return template
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;improvements&#34;&gt;Improvements&lt;/h4&gt;
-
-&lt;p&gt;The first thing to do was to create a large PO file that could be used
-as a reference point for measuring the impact of each improvement. The one we generated had some tens of thousands of &lt;code&gt;msgid&lt;/code&gt; entries and the original algorithm needed about 80 seconds to &lt;em&gt;compile&lt;/em&gt; the result.&lt;/p&gt;
-
-&lt;h4 id=&#34;why-regular-expressions&#34;&gt;Why regular expressions?&lt;/h4&gt;
-
-&lt;p&gt;What struck us as odd was the use of regular expressions for what
-should be a simple search-&amp;amp;-replace operation. Regular expressions are known to be much slower than an equivalent simple text operation.&lt;/p&gt;
-
-&lt;p&gt;So, the first try was to change the regular expression call with a call to the replace function for strings. In Python, this means using
-&lt;a href=&#34;http://docs.python.org/library/stdtypes.html#str.replace&#34;&gt;&lt;code&gt;str.replace&lt;/code&gt;&lt;/a&gt;
-instead of &lt;a href=&#34;http://docs.python.org/library/re.html#re.sub&#34;&gt;&lt;code&gt;re.sub&lt;/code&gt;&lt;/a&gt;.
-The result was that the execution time dropped to half, to about 40s. But still, that was not enough.&lt;/p&gt;
-
-&lt;h4 id=&#34;revisiting-the-compilation-process&#34;&gt;Revisiting the compilation process&lt;/h4&gt;
-
-&lt;p&gt;Going back to the compilation process, the main problem was the for
-loop that iterated over all strings and did a search-and-replace in
-the whole text &lt;strong&gt;every&lt;/strong&gt; time. That means that the original template was
-scanned multiple times — an &lt;code&gt;O(n^2)&lt;/code&gt; algorithm. How could we do all replacements in one pass?&lt;/p&gt;
-
-&lt;p&gt;Regular expressions to the rescue! It turns out the &lt;code&gt;re.sub&lt;/code&gt; function
-can accept a function as an argument, which, given the matched object, returns a string to use as a replacement.&lt;/p&gt;
-
-&lt;p&gt;From then on the way to go was clear: we created a dictionary (hash or map in other languages), &lt;code&gt;translations&lt;/code&gt;, that mapped each hash to the
-corresponding string and a function, which, given a matched object,
-would use the dictionary to return the correct string.&lt;/p&gt;
-
-&lt;p&gt;Then, all we needed to do is to construct a regular expression that
-matches md5 hashes and use that and the above function as arguments in &lt;code&gt;re.sub&lt;/code&gt; to replace all hashes with the corresponding strings in one pass of the template:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;md5_pattern = r&#39;[0-9a-f]{32}&#39;
-regex = re.compile(md5_pattern, re.IGNORECASE)
-return regex.sub(
-        lambda m: translations.get(m.group(0), m.group(0)), text
-    )
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;which is a &lt;code&gt;O(n)&lt;/code&gt; algorithm.&lt;/p&gt;
-
-&lt;p&gt;The execution time was crashed to about 10 seconds (compared to the 80 seconds that were needed for the initial process). But still, not good
-enough.&lt;/p&gt;
-
-&lt;h4 id=&#34;dealing-with-po-files&#34;&gt;Dealing with PO files&lt;/h4&gt;
-
-&lt;p&gt;The specific file we used for testing was a PO file and, given that
-the gettext format (the format of PO files) is among the most popular
-internationalization formats, we had to do better.&lt;/p&gt;
-
-&lt;p&gt;This time the main bottleneck was some extra processing of the PO file
-performed at the end that adds the copyrights to the file header for
-translators that contributed to the translation.&lt;/p&gt;
-
-&lt;p&gt;The previous implementation was iterating over the lines looking for
-the appropriate place to insert the names of the translators. As soon
-as it found that, it would insert them and then keep on iterating over
-those lines. Adding an explicit &lt;code&gt;break&lt;/code&gt; statement resulted in another
-great decrease of the execution time: it dropped to &lt;strong&gt;1-2 seconds&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;h4 id=&#34;conclusions&#34;&gt;Conclusions&lt;/h4&gt;
-
-&lt;p&gt;First, developers are pretty bad at finding the bottleneck of a process. The initial thought of the database queries being the bottleneck was totally wrong.&lt;/p&gt;
-
-&lt;p&gt;The most important thing, though, is that the most important thing to take care of are the algorithms we use in our work.&lt;/p&gt;
-</description>
+      <description>This is the story of taking a 80 seconds operation down to 2 seconds.
+One of the most common operations in Transifex is downloading a translation file (the second is uploading one). Since files are downloaded all the time, the process should be as fast as possible.
+Some projects, however, have files with thousands of entries, which presented us with some challenges: download times could take a lot of seconds depending on the size of the file — an issue for both our users and our servers :).</description>
     </item>
     
     <item>
@@ -736,98 +132,9 @@ great decrease of the execution time: it dropped to &lt;strong&gt;1-2 seconds&lt
       <pubDate>Fri, 06 Jan 2012 11:30:08 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/testing-with-postgresql/</guid>
-      <description>&lt;p&gt;Transifex is a quite big application, counting tens of thousands of lines of Python, javascript and HTML code. In order to make sure the code works, it has an extensive test suite, which, obviously, takes quite some time to run.&lt;/p&gt;
-
-&lt;p&gt;There are various things that can be done to make tests run faster. But let&amp;rsquo;s talk about databases.&lt;/p&gt;
-
-&lt;p&gt;Transifex is built on top of &lt;a href=&#34;https://www.djangoproject.com&#34;&gt;Django&lt;/a&gt; and uses its ORM. As a result, it can use various database backends, like &lt;a href=&#34;http://www.sqlite.org/&#34;&gt;SQLite&lt;/a&gt; and &lt;a href=&#34;http://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;When Django is configured to use SQLite, it does a nice little trick when running the test suite; it creates the database in memory. As a result, database access is very fast, since there is no I/O, which results in reduced execution time for the tests.&lt;/p&gt;
-
-&lt;p&gt;For example, we run the test suite for the &lt;em&gt;projects&lt;/em&gt; app of Transifex:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;time ./manage.py test projects
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and the results are:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;real    2m52.429s
-user    2m5.132s
-sys     0m2.953s
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For the &lt;em&gt;resources&lt;/em&gt; app (the test suite of which is much bigger) the results are:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;real    6m29.072s
-user    4m35.209s
-sys     0m8.956s
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Of course, the above numbers are not a benchmark, but just an indication of how long it takes to run those tests on a machine with 8GB of RAM.&lt;/p&gt;
-
-&lt;p&gt;However, &lt;a href=&#34;https://www.transifex.net&#34;&gt;Transifex.net&lt;/a&gt; runs on PostgreSQL and all testing should be done with the setup that is used in production. For instance, PostgreSQL is much more strict about transaction semantics than SQLite and that affects many tests. That means, tests should be run against PostgreSQL.&lt;/p&gt;
-
-&lt;p&gt;But, the default setup of PostgreSQL is not optimized at all. In fact, the default settings are chosen, so that PostgreSQL can run on servers with as little as 64MB of RAM (or something like that).&lt;/p&gt;
-
-&lt;p&gt;With the default setup of PostgreSQL, the &lt;em&gt;projects&lt;/em&gt; test suite runs in:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;real    4m40.891s
-user    2m16.898s
-sys     0m3.816s
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and the &lt;em&gt;resources&lt;/em&gt; app in&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;real    10m7.483s
-user    4m58.841s
-sys     0m9.566s
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Both running times are mush worse than those achieved, when using SQLite as database backend.&lt;/p&gt;
-
-&lt;p&gt;There are a few settings, however, which could be optimized to make PostgreSQL faster for testing. In my machine, I have&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;shared_buffers = 512MB
-work_mem = 16MB
-fsync = off
-synchronous_commit = off
-wal_buffers = 64MB
-checkpoint_segments = 36
-checkpoint_timeout = 10min
-random_page_cost = 2.0
-effective_cache_size = 1024MB
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The goal is to allow PostgreSQL to use much more memory and, as a result, to choose more efficient execution plans for the queries. For instance, we set the &lt;code&gt;work_mem&lt;/code&gt; to 16MB, a value large enough (for the tests of Transifex), so that all &lt;code&gt;SORT&lt;/code&gt; operations are executed in RAM.&lt;/p&gt;
-
-&lt;p&gt;At the same time, we try to reduce the I/O that PostgreSQL will perform. For example, we deactivate the &lt;code&gt;fsync&lt;/code&gt; option, which instructs PostgreSQL to do a &lt;code&gt;fsync()&lt;/code&gt; call, whenever it writes something to disk, and increase the &lt;code&gt;checkpoint_segments&lt;/code&gt; option, which instructs PostgreSQL to flush data in larger intervals.&lt;/p&gt;
-
-&lt;p&gt;You can see what each option is for in the &lt;a href=&#34;http://www.postgresql.org/docs/current/static/&#34;&gt;manual of PostgreSQL&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;With the above settings, the execution times are:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;real    3m4.360s
-user    2m14.458s
-sys     0m3.360s
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;for the &lt;em&gt;projects&lt;/em&gt; app and&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;real    6m49.579s
-user    4m49.101s
-sys     0m9.256s
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;for the &lt;em&gt;resources&lt;/em&gt; app, which are comparable to the ones obtained, when using SQLite.&lt;/p&gt;
-
-&lt;p&gt;The values chosen depend, of course, on the CPU and available memory you have. Additionally, some of the options (like &lt;code&gt;fsync&lt;/code&gt;) should not be used in production.
-Keep also in mind that you will probably need to increase the maximum size of a shared memory segment with the command&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sysctl -w kernel.shmmax=8589934592
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;in order to use the above settings (or add the new value in &lt;code&gt;/etc/sysctl.conf&lt;/code&gt;).&lt;/p&gt;
-</description>
+      <description>Transifex is a quite big application, counting tens of thousands of lines of Python, javascript and HTML code. In order to make sure the code works, it has an extensive test suite, which, obviously, takes quite some time to run.
+There are various things that can be done to make tests run faster. But let&amp;rsquo;s talk about databases.
+Transifex is built on top of Django and uses its ORM. As a result, it can use various database backends, like SQLite and PostgreSQL.</description>
     </item>
     
     <item>
@@ -836,23 +143,9 @@ Keep also in mind that you will probably need to increase the maximum size of a 
       <pubDate>Tue, 27 Dec 2011 11:31:39 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/timedrotatingfilehandler/</guid>
-      <description>&lt;p&gt;&lt;span class=&#34;comment&#34;&gt;(For future reference.)&lt;/span&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://docs.python.org/library/logging.handlers.html#timedrotatingfilehandler&#34;&gt;&lt;code&gt;TimedRotatingFileHandler&lt;/code&gt;&lt;/a&gt; logs messages to a file and rotates it based on time values.&lt;/p&gt;
-
-&lt;p&gt;Among the arguments it accepts is the &lt;code&gt;when&lt;/code&gt; argument, which specifies the type of interval. One of the possible values is &lt;code&gt;&#39;W&#39;&lt;/code&gt;, which specifies that the rollover should be done on a specific day of the week (with &lt;code&gt;0&lt;/code&gt; being Monday). The day is specified by appending the necessary number (&lt;code&gt;[0-6]&lt;/code&gt;) to &lt;code&gt;when&lt;/code&gt;, like &lt;code&gt;W0&lt;/code&gt; for rotating the logs on Mondays.&lt;/p&gt;
-
-&lt;p&gt;The relevant code from logging.handler:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;elif self.when.startswith(&#39;W&#39;):
-    self.interval = 60 * 60 * 24 * 7 # one week
-    if len(self.when) != 2:
-        raise ValueError(...)
-    if self.when[1]  &#39;6&#39;:
-        raise ValueError(...)
-    self.dayOfWeek = int(self.when[1])
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>(For future reference.)
+TimedRotatingFileHandler logs messages to a file and rotates it based on time values.
+Among the arguments it accepts is the when argument, which specifies the type of interval. One of the possible values is &#39;W&#39;, which specifies that the rollover should be done on a specific day of the week (with 0 being Monday). The day is specified by appending the necessary number ([0-6]) to when, like W0 for rotating the logs on Mondays.</description>
     </item>
     
     <item>
@@ -861,12 +154,7 @@ Keep also in mind that you will probably need to increase the maximum size of a 
       <pubDate>Mon, 26 Dec 2011 11:33:09 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/russ-cox-regular-expressions/</guid>
-      <description>&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://swtch.com/~rsc/regexp/regexp1.html&#34;&gt;http://swtch.com/~rsc/regexp/regexp1.html&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://swtch.com/~rsc/regexp/regexp2.html&#34;&gt;http://swtch.com/~rsc/regexp/regexp2.html&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://swtch.com/~rsc/regexp/regexp3.html&#34;&gt;http://swtch.com/~rsc/regexp/regexp3.html&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> http://swtch.com/~rsc/regexp/regexp1.html http://swtch.com/~rsc/regexp/regexp2.html http://swtch.com/~rsc/regexp/regexp3.html  </description>
     </item>
     
     <item>
@@ -875,10 +163,7 @@ Keep also in mind that you will probably need to increase the maximum size of a 
       <pubDate>Sat, 12 Nov 2011 11:34:20 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/distinct-in-sql/</guid>
-      <description>&lt;p&gt;How does a RDBMS execute a query that has the &lt;code&gt;DISTINCT&lt;/code&gt; keyword? The most effective  way to ensure the uniqueness of the returned rows of a query is to sort them first; that is, to sort the result based on all fields. Depending on the number of fields &lt;code&gt;SELECT&lt;/code&gt;ed, this sorting could take a lot of time and need a lot of RAM. If the available RAM is not enough, the RDBMS will resort to using the disk, which is too slow.&lt;/p&gt;
-
-&lt;p&gt;So, it is very important to &lt;code&gt;SELECT&lt;/code&gt; as few fields as possible. This makes the sorting phase much faster and, additionally, requires less RAM. We had such an &lt;a href=&#34;http://blog.transifex.net/2011/11/a-little-bug-bites-the-dust-the-anatomy-of-fixing-performance-issues/&#34; title=&#34;DISTINCT issue at Transifex&#34;&gt;issue at Transifex&lt;/a&gt;.&lt;/p&gt;
-</description>
+      <description>How does a RDBMS execute a query that has the DISTINCT keyword? The most effective way to ensure the uniqueness of the returned rows of a query is to sort them first; that is, to sort the result based on all fields. Depending on the number of fields SELECTed, this sorting could take a lot of time and need a lot of RAM. If the available RAM is not enough, the RDBMS will resort to using the disk, which is too slow.</description>
     </item>
     
     <item>
@@ -887,15 +172,8 @@ Keep also in mind that you will probably need to increase the maximum size of a 
       <pubDate>Wed, 09 Nov 2011 11:35:21 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/iptables-in-a-hurry/</guid>
-      <description>&lt;p&gt;Accepting incoming connections to a port only from specific hosts in the middle of the night:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;iptables -I INPUT -p tcp --dport $dport -j REJECT
-for ip in $ips; do
-    iptables -I INPUT -p tcp --dport $dport --source $ip -j ACCEPT
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We have to do it in the above order, since -I &lt;strong&gt;inserts&lt;/strong&gt; the rule at the head of the list of rules.&lt;/p&gt;
-</description>
+      <description>Accepting incoming connections to a port only from specific hosts in the middle of the night:
+iptables -I INPUT -p tcp --dport $dport -j REJECT for ip in $ips; do iptables -I INPUT -p tcp --dport $dport --source $ip -j ACCEPT  We have to do it in the above order, since -I inserts the rule at the head of the list of rules.</description>
     </item>
     
     <item>
@@ -904,42 +182,36 @@ for ip in $ips; do
       <pubDate>Thu, 13 Oct 2011 11:36:36 +0200</pubDate>
       
       <guid>http://blog.bessas.me/posts/on-database-and-code-changes/</guid>
-      <description>&lt;p&gt;Running a web application means that you always develop new features (and fix bugs) which should be deployed as soon as possible. This is the only way these enhancements reach your users. However, it also means that your application is used by people from all over the world, i.e., there is no point in time, when you can just shutdown the servers and do any necessary maintenance work; downtime should be avoided.&lt;/p&gt;
-
-&lt;p&gt;Of particular difficulty are changes in code which require changes in the database schema, too. If you had the luxury of taking the servers down, you would be able to change the database schema, run any data migrations necessary and update the application code. But you do not have that luxury. So, you must make sure you do all those steps, while the servers are running, and at the same time you must ensure that at no point in the update process a request from a user fails.&lt;/p&gt;
-
-&lt;p&gt;Updating the application code first is not an option, since it would try to use the new database schema, before it was deployed. The only option is to first update the database schema with the new changes, while making sure that existing code that uses the old schema does not break.&lt;/p&gt;
-
-&lt;p&gt;However, that is not straightforward either. Consider the case of adding a new column which does not have a default value to use; any &lt;code&gt;INSERT&lt;/code&gt; queries in the existing code would fail, since they do not account for the new column.&lt;/p&gt;
-
-&lt;p&gt;Additionally, there are issues with &lt;a href=&#34;http://mpessas.tumblr.com/post/11220255249/on-database-schema-changes&#34;&gt;changing the database schema&lt;/a&gt;, too; you must take extra care not to block any concurrent user requests to the database. So, you must plan ahead for the various steps you need to take.&lt;/p&gt;
-
-&lt;p&gt;At &lt;a href=&#34;https://www.transifex.net&#34;&gt;Transifex&lt;/a&gt; we have adopted the following procedure for handling probably the most complex type of change: adding a new column to a table.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;First, the new column is added to the database with no restrictions whatsoever using &lt;code&gt;NULL&lt;/code&gt; as the default value. That is, in case we wanted to add a column named &lt;code&gt;col&lt;/code&gt; to a table named &lt;code&gt;tbl&lt;/code&gt; of type &lt;code&gt;INT&lt;/code&gt; we would issue the query&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ALTER TABLE tbl ADD col INT NULL
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Allowing null values avoids rewriting the table, i.e., it is the fastest way to add a new column to a table. As a result, the time the table is locked for other requests is minimum. Moreover, any writes to the table will just use the &lt;code&gt;NULL&lt;/code&gt; value for the specific column.
-- Set the default value for the column, if there is one. Assuming the default value for the above column is 0, we would issue the query&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ALTER TABLE tbl ALTER col SET DEFAULT 0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Setting the default value before updating the code to write to the new column allows any writes issued to take advantage of it.
-- Update the code to start writing data to the new column. At this point, the database is not fully consistent yet. By enabling the writes we will eventually reach a consistent state.
-- Update existing rows with the data they should have, i.e., migrate the existing data to the new schema. At the end of this step, the table should be in a consistent state. We can also make sure that we have changed all the writes to the database to use the new schema. For example, if the code update was correct, there should be no writes that add a &lt;code&gt;NULL&lt;/code&gt; value.
-- Add the necessary constraints to the column. For example, add the constraint that the column is a foreign key.
-- Add the necessary indexes using the new column.
-- Update the code to start reading values from the column. The update is now complete.&lt;/p&gt;
-
-&lt;p&gt;Other database schema changes can be handled in similar ways.&lt;/p&gt;
-
-&lt;p&gt;In summary, we try to make the operation of adding the column as fast as possible, since this locks the table and blocks &lt;strong&gt;all&lt;/strong&gt; queries. Then, we enable the writes to the table, so that we can reach a consistent state. Only then do we enforce the constraints and add the necessary indexes. Finally, we start reading and fully utilizing the new column.&lt;/p&gt;
-</description>
+      <description>Running a web application means that you always develop new features (and fix bugs) which should be deployed as soon as possible. This is the only way these enhancements reach your users. However, it also means that your application is used by people from all over the world, i.e., there is no point in time, when you can just shutdown the servers and do any necessary maintenance work; downtime should be avoided.</description>
+    </item>
+    
+    <item>
+      <title>On database schema changes</title>
+      <link>http://blog.bessas.me/posts/on-database-schema-changes/</link>
+      <pubDate>Sun, 09 Oct 2011 11:37:46 +0200</pubDate>
+      
+      <guid>http://blog.bessas.me/posts/on-database-schema-changes/</guid>
+      <description>Working on a constantly evolving web application means that sooner or later you will have to change your database schema. One of the most difficult changes to make is to add a new column to a table.
+Let&amp;rsquo;s say you need to add a new column ncol to an existing table t in a database. The new column is of type INT, it cannot take the NULL value and defaults to the value 0.</description>
+    </item>
+    
+    <item>
+      <title>On reference tables</title>
+      <link>http://blog.bessas.me/posts/on-reference-tables/</link>
+      <pubDate>Tue, 04 Oct 2011 11:38:38 +0200</pubDate>
+      
+      <guid>http://blog.bessas.me/posts/on-reference-tables/</guid>
+      <description>Working on a constantly evolving web application means that sooner or later you will have to change your database schema. One of the most difficult changes to make is to add a new column to a table.
+Let&amp;rsquo;s say you need to add a new column ncol to an existing table t in a database. The new column is of type INT, it cannot take the NULL value and defaults to the value 0.</description>
+    </item>
+    
+    <item>
+      <title>On database denormalization</title>
+      <link>http://blog.bessas.me/posts/on-database-denormalization/</link>
+      <pubDate>Thu, 29 Sep 2011 11:39:32 +0200</pubDate>
+      
+      <guid>http://blog.bessas.me/posts/on-database-denormalization/</guid>
+      <description>One of the factors of a successful web application is its speed. However, the more successful the application is, the more serious performance issues it will have. As the users and their activity in the application and the data they manage begin to increase, every action becomes even slower, since it competes with more requests for the same resources (CPU, RAM, I/O) and has more data to manage. Usually, the problem lies in the database hits and the queries the app executes.</description>
     </item>
     
   </channel>

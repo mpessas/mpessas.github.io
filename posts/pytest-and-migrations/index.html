@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-	<meta name="generator" content="Hugo 0.20" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="HandheldFriendly" content="True">
@@ -20,10 +19,10 @@
     <title>
       
       
-         That&#39;s weird... 
+         Speeding up the Django database creation with pytest 
       
     </title>
-    <link rel="canonical" href="http://blog.bessas.me/">
+    <link rel="canonical" href="http://blog.bessas.me/posts/pytest-and-migrations/">
 
     <style>
   * {
@@ -379,8 +378,6 @@
 
 
     
-      <link href="http://blog.bessas.me/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
-    
   </head>
 
   <body>
@@ -395,149 +392,95 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Speeding up the Django database creation with pytest </h1>
+
+  <div id=sub-header>
+    April 2017 · 2 minute read
+  </div>
+
+  <div class="entry-content">
+    <p>The standard way to set up the database for running your Django test suite is to
+run the the projects migrations from scratch.</p>
+
+<p>This can be quite slow, though, when there are many migrations. For this reason,
+<code>pytest-django</code> provides an option to keep the database between runs, so as to
+avoid this cost every time (<code>--reuse-db</code> option).</p>
+
+<p>However, one still has to create the database every now and then from scratch,
+e.g. when there are new migrations in the current branch.</p>
+
+<p>One way to always make setting up the database fast is to cache the database
+schema itself and use pytest-django&rsquo;s hooks to load it and only then apply any
+necessary migrations.</p>
+
+<p>The process is the following:
+- Run the test suite with the <code>--reuse-db</code> option.
+- Use <code>pg_dump</code> (or equivalent) to create a backup of your database and commit
+  it in your main branch.
+- Override <code>pytest-django</code>&rsquo;s fixtures in the top-level <code>conftest.py</code> file to
+  first load the backup (using <code>pg_restore</code> or equivalent) and then run the
+  migrations. Every branch should be rebased on top of devel frequently.</p>
+
+<p>Here is an example implementation:</p>
+
+<pre><code>import subprocess
+
+import pytest
+from django.conf import settings
+from django.db import connection
+
+
+@pytest.fixture(scope='session')
+def _django_db_setup(request, _django_test_environment,
+                     _django_cursor_wrapper):
+    &quot;&quot;&quot;Load cached schema from the filesystem before running the migrations.&quot;&quot;&quot;
+    from django.core.management import call_command
+
+    config = request.config
+    django_db_keepdb = all([
+        config.getvalue('reuse_db'), not config.getvalue('create_db')
+    ])
+
+    test_database_name = 'test_db'
+
+    if django_db_keepdb:
+        # Update settings and return.
+        settings.DATABASES[connection.alias][&quot;NAME&quot;] = test_database_name
+        connection.settings_dict[&quot;NAME&quot;] = test_database_name
+        return
+
+    with _django_cursor_wrapper:
+        cursor = connection.cursor()
+        cursor.execute(&quot;DROP DATABASE IF EXISTS %s&quot; % test_database_name)
+        cursor.execute(
+            &quot;CREATE DATABASE %s WITH TEMPLATE template1&quot; % test_database_name
+        )
+        cursor.close()
+        connection.close()
+    cmd = (
+        'pg_restore -n public -U %s -h %s '
+        '-d test_db test_db_schema.dump'
+    )
+    username = settings.DATABASES['default']['USER']
+    host = settings.DATABASES['default']['HOST']
+    subprocess.call(cmd % (username, host), shell=True)
+
+    with _django_cursor_wrapper:
+        settings.DATABASES[connection.alias][&quot;NAME&quot;] = test_database_name
+        connection.settings_dict[&quot;NAME&quot;] = test_database_name
+        call_command('migrate', '--noinput')
+</code></pre>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/request-ids-in-django/">Assigning a unique ID to each request in Django</a></h2>
-        <div id=date>
-          <time>April 2017</time>
-        </div>
-      </li>
+      <a class="basic-alignment left" href="http://blog.bessas.me/posts/another-reason-to-decouple-from-models/">&laquo; Another reason to decouple your code from the models</a>
     
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/pytest-and-migrations/">Speeding up the Django database creation with pytest</a></h2>
-        <div id=date>
-          <time>April 2017</time>
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/another-reason-to-decouple-from-models/">Another reason to decouple your code from the models</a></h2>
-        <div id=date>
-          <time>March 2017</time>
-        </div>
-      </li>
+      <a class="basic-alignment left" href="http://blog.bessas.me/posts/request-ids-in-django/">Assigning a unique ID to each request in Django &raquo;</a>
     
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/using-env-files/">Using .env files</a></h2>
-        <div id=date>
-          <time>August 2016</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/django-forms-models-and-dry/">Django, forms, models and DRY</a></h2>
-        <div id=date>
-          <time>November 2014</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/">Exposing objects in multiple represenations</a></h2>
-        <div id=date>
-          <time>February 2014</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/using-gettext-in-django/">Using gettext in Django</a></h2>
-        <div id=date>
-          <time>November 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/">Running your Django tests in memory with PostgreSQL</a></h2>
-        <div id=date>
-          <time>October 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/">Forward attribute access for wrapper classes</a></h2>
-        <div id=date>
-          <time>July 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/using-functions-in-update-queries-django/">Using functions in UPDATE queries from the Django ORM</a></h2>
-        <div id=date>
-          <time>April 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/transifex-optimize-download/">Optimizing the operation of downloading files in Transifex</a></h2>
-        <div id=date>
-          <time>February 2013</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/testing-with-postgresql/">Testing with PostgreSQL</a></h2>
-        <div id=date>
-          <time>January 2012</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/timedrotatingfilehandler/">TimedRotatingFileHandler</a></h2>
-        <div id=date>
-          <time>December 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/russ-cox-regular-expressions/">Russ Cox&#39;s articles on regular expressions</a></h2>
-        <div id=date>
-          <time>December 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/distinct-in-sql/">DISTINCT in SQL</a></h2>
-        <div id=date>
-          <time>November 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/iptables-in-a-hurry/">iptables in a hurry</a></h2>
-        <div id=date>
-          <time>November 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/on-database-and-code-changes/">On database and code changes</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/on-database-schema-changes/">On database schema changes</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/on-reference-tables/">On reference tables</a></h2>
-        <div id=date>
-          <time>October 2011</time>
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="http://blog.bessas.me/posts/on-database-denormalization/">On database denormalization</a></h2>
-        <div id=date>
-          <time>September 2011</time>
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
@@ -550,5 +493,6 @@ ga('send', 'pageview');
 
 </body>
 </html>
+
 
 
