@@ -20,10 +20,10 @@
     <title>
       
       
-         Assigning a unique ID to each request in Django 
+         Rules for writing tests 
       
     </title>
-    <link rel="canonical" href="https://blog.bessas.me/posts/request-ids-in-django/">
+    <link rel="canonical" href="https://blog.bessas.me/posts/rules-for-writing-tests/">
 
     <style>
   * {
@@ -402,73 +402,92 @@
 
 
 <section id=content>
-  <h1> Assigning a unique ID to each request in Django </h1>
+  <h1> Rules for writing tests </h1>
 
   
     <div id=sub-header>
-      April 2017 · 2 minute read
+      November 2018 · 4 minute read
     </div>
   
 
   <div class="entry-content">
-    <p>It is a standard practice to assign a unique ID to every request, so that you
-can easily associate the log messages with their request and, thus, make
-debugging easier.</p>
+    <p>When writing tests for a (Python) codebase:</p>
 
-<p>You can do that in Django using a middleware. The middleware needs to define the
-<code>process_request</code> metho and generate the unique ID (e.g. using UUID) to
-associate with the request.</p>
+<ul>
+<li>We use pytest fixtures. They are way more flexible than an inheritance-based
+system and allow for fine-grained dependencies.</li>
+<li>Every test case should test for a single behavior. This usually means having a
+single <code>assert</code> statement in a test case. This makes it easier to know why a
+test failed and what behavior is tested.</li>
+<li>The structure of the test suite on the filesystem should mirror that of the
+codebase, so as to be quick to find the tests for a piece of code.</li>
+<li>Any package should be free to define its own fixtures in a local
+<code>conftest.py</code>. Not all fixtures make sense to go to the top-level
+<code>conftest.py</code> file.</li>
+<li>A test can override fixtures defined up in the hierarchy, but it should prefer
+to use a new name that makes sense locally. Otherwise, there could be
+confusion about which fixture is used.</li>
+<li>A test case should test one specific thing and test it right at the edge of
+where it is defined and not at higher levels. For instance, if you want to
+test the behavior of a function, do not do it via the API that happens to use
+that function deep in the call hierarchy. This way you are guaranteed that the
+test does not fail for any other reason than what you are testing for.</li>
+<li>A test case must avoid any network calls. Otherwise, tests are slow and
+non-deterministic (e.g. the remote service can go down at any time).</li>
+<li>A test case should avoid any database calls, if possible. Any I/O is slow.</li>
+<li>A test case should avoid mocking, when possible. Prefer to use real fixtures
+or refactor the code to not have as many dependencies. Mocking is fragile and
+the whole concept relies on people remembering to update the mocks as they
+refactor the code.</li>
+<li>Related to mocking: it is mostly useful when you want to avoid side-effects
+(e.g. kicking off a task). It does not always make sense to do dependency
+injection just for the sake of testing. In those cases, mocking is your
+preferable option.</li>
+<li>There should be switches that are turned off when running the test suite and
+completely kill unnecessary side-effects and 3rd party integrations entirely
+(e.g. any integration with a 3rd-party service). This way it is easier to
+ensure that you avoid any extra I/O and minimize the dependencies for your
+test.</li>
+<li>Tests should never cross systems: background tasks should not be allowed to be
+called, application-level events should not be handled. For instance, (in the
+case of tasks) write 2 test cases: one that verifies that a task would be
+called with the proper arguments and one that tests how the task works with
+those arguments. Otherwise, your tests also test the message bus.</li>
+<li>Define the input of a test case explicitly. This way you minimize the
+dependencies of the test case and you are certain what the test does.</li>
+<li>Functional/end-to-end tests are useful, but they should be a very small part
+of the test suite and indicated as such. These tests are slow, freagile and
+thus difficult-to-maintain. They can be useful, e.g. to actually test that
+making an API call results in a webhook being sent, but (i) that behavior
+should have been covered by multiple tests already and (b) it makes more sense
+to have that test against a staging environment and not in the test suite.</li>
+<li>If a test case takes more than a few hundred milliseconds to run, it is not a
+unit-test. This is a good indication that a test case does too many things.</li>
+<li>The default case for a test would be to use <a href="https://docs.pytest.org/en/latest/parametrize.html#pytest-mark-parametrize-parametrizing-test-functions"><code>pytest.mark.parametrize</code></a>:
+a test should have certain inputs that lead to certain outputs. Many functions
+should be written in a way that take a certain input and that causes a
+deterministic output. Using <code>parametrize</code> helps you write functions in such a
+way and it is a very quick way to test for more inputs and outputs.</li>
+<li>There should be tests not just for the happy path. Code coverage is an
+indicator for how good a test suite is but a meaningless metric. Code should
+be tested as much as possible. The goal should be to cover all possible
+combinations of input/output instead of whether every line has been hit by a
+single test.</li>
+</ul>
 
-<p>One way to use this ID is to pass it as an argument down the call stack and use
-it in every log message. That approach, however, creates a dependency from the
-upper layer (HTTP layer) to the lower level layers (model or domain layer).
-Moreover, this approach requires that every function accepts the ID as an
-argument, which complicates the function signatures.</p>
+<p>Bonus:</p>
 
-<p>An alternative is to use thread local variables. These variables are similar to
-global variables, but their scope is limited within the thread of execution.
-This way all logging code has access to the thread local variable (if defined).</p>
-
-<p>It should be noted, however, that these are global variables and so should be
-handled with care.</p>
-
-<p>It is useful, however, to use the same ID in celery tasks, so that you can trace
-the request in the celery workers log messages, as well. This can be achieved
-using celery&rsquo;s <code>before_task_publish_handler</code> signal (to add the ID to the task
-arguments) and <code>task_prerun_handler</code> signal (to read the ID from the task
-arguments and set the thread local variable).</p>
-
-<p>The final piece of the puzzle is creating log filters that read the thread local
-variables and make them available to the log message formatters automatically,
-e.g.</p>
-
-<pre><code>import logging
-from threading import local
-
-_locals = local()
-
-
-def get_current_identifier():
-    &quot;&quot;&quot;Get the current identifier of the request/task etc.&quot;&quot;&quot;
-    return getattr(_locals, 'identifier', u'')
-
-
-class ContextFilter(logging.Filter):
-    &quot;&quot;&quot;Add the request.user to the context of a log record.&quot;&quot;&quot;
-
-    def filter(self, record):
-        record.user_identifier = get_current_identifier()
-        return True
-</code></pre>
+<ul>
+<li>The longer a function is, the more combinations there are to test. Write small
+functions that are as pure as possible.</li>
+</ul>
 
   </div>
 
   <div id=links>
     
-      <a class="basic-alignment left" href="https://blog.bessas.me/posts/pytest-and-migrations/">&laquo; Speeding up the Django database creation with pytest</a>
+      <a class="basic-alignment left" href="https://blog.bessas.me/posts/request-ids-in-django/">&laquo; Assigning a unique ID to each request in Django</a>
     
-    
-      <a class="basic-alignment left" href="https://blog.bessas.me/posts/rules-for-writing-tests/">Rules for writing tests &raquo;</a>
     
   </div>
 </section>
