@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>That&#39;s weird...</title>
-    <link>http://blog.bessas.me/</link>
+    <link>https://blog.bessas.me/</link>
     <description>Recent content on That&#39;s weird...</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 25 Apr 2017 10:55:11 +0300</lastBuildDate>
     
-	<atom:link href="http://blog.bessas.me/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.bessas.me/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Assigning a unique ID to each request in Django</title>
-      <link>http://blog.bessas.me/posts/request-ids-in-django/</link>
+      <link>https://blog.bessas.me/posts/request-ids-in-django/</link>
       <pubDate>Tue, 25 Apr 2017 10:55:11 +0300</pubDate>
       
-      <guid>http://blog.bessas.me/posts/request-ids-in-django/</guid>
+      <guid>https://blog.bessas.me/posts/request-ids-in-django/</guid>
       <description>It is a standard practice to assign a unique ID to every request, so that you can easily associate the log messages with their request and, thus, make debugging easier.
 You can do that in Django using a middleware. The middleware needs to define the process_request metho and generate the unique ID (e.g. using UUID) to associate with the request.
 One way to use this ID is to pass it as an argument down the call stack and use it in every log message.</description>
@@ -24,10 +24,10 @@ One way to use this ID is to pass it as an argument down the call stack and use 
     
     <item>
       <title>Speeding up the Django database creation with pytest</title>
-      <link>http://blog.bessas.me/posts/pytest-and-migrations/</link>
+      <link>https://blog.bessas.me/posts/pytest-and-migrations/</link>
       <pubDate>Tue, 25 Apr 2017 07:48:22 +0300</pubDate>
       
-      <guid>http://blog.bessas.me/posts/pytest-and-migrations/</guid>
+      <guid>https://blog.bessas.me/posts/pytest-and-migrations/</guid>
       <description>The standard way to set up the database for running your Django test suite is to run the the projects migrations from scratch.
 This can be quite slow, though, when there are many migrations. For this reason, pytest-django provides an option to keep the database between runs, so as to avoid this cost every time (--reuse-db option).
 However, one still has to create the database every now and then from scratch, e.</description>
@@ -35,10 +35,10 @@ However, one still has to create the database every now and then from scratch, e
     
     <item>
       <title>Another reason to decouple your code from the models</title>
-      <link>http://blog.bessas.me/posts/another-reason-to-decouple-from-models/</link>
+      <link>https://blog.bessas.me/posts/another-reason-to-decouple-from-models/</link>
       <pubDate>Tue, 21 Mar 2017 09:36:05 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/another-reason-to-decouple-from-models/</guid>
+      <guid>https://blog.bessas.me/posts/another-reason-to-decouple-from-models/</guid>
       <description>As the application grows, the schema in the database will evolve as well, e.g. you will need new tables or add new columns to an existing table.
 One of the changes that may need to take place is editing the column, either the type or its size or even the type of data it contains.
 If you want to do the change without incurring any downtime, the best way to alter the column is to add a new column, migrate the data and then remove the old one.</description>
@@ -46,20 +46,20 @@ If you want to do the change without incurring any downtime, the best way to alt
     
     <item>
       <title>Using .env files</title>
-      <link>http://blog.bessas.me/posts/using-env-files/</link>
+      <link>https://blog.bessas.me/posts/using-env-files/</link>
       <pubDate>Sat, 13 Aug 2016 10:25:01 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/using-env-files/</guid>
+      <guid>https://blog.bessas.me/posts/using-env-files/</guid>
       <description>Enabling the environment variables in a bash script:
 env $(cat .env.test | xargs)  </description>
     </item>
     
     <item>
       <title>Django, forms, models and DRY</title>
-      <link>http://blog.bessas.me/posts/django-forms-models-and-dry/</link>
+      <link>https://blog.bessas.me/posts/django-forms-models-and-dry/</link>
       <pubDate>Sun, 23 Nov 2014 09:42:37 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/django-forms-models-and-dry/</guid>
+      <guid>https://blog.bessas.me/posts/django-forms-models-and-dry/</guid>
       <description>Django provides a forms package to make working with forms in web applications easier.
 Forms work by subclassing the Form class and defining the fields in the class:
 class MyForm(forms.Form): field1 = forms.CharField(max_length=10) field2 = forms.IntegerField()  But in most cases a form mirrors a model in the database, where you have already declared the properties for those fields. For this use case, Django provides ModelForm to use as a base class.</description>
@@ -67,60 +67,60 @@ class MyForm(forms.Form): field1 = forms.CharField(max_length=10) field2 = forms
     
     <item>
       <title>Exposing objects in multiple represenations</title>
-      <link>http://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/</link>
+      <link>https://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/</link>
       <pubDate>Tue, 11 Feb 2014 11:11:02 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/</guid>
+      <guid>https://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/</guid>
       <description>The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
 The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes.</description>
     </item>
     
     <item>
       <title>Using gettext in Django</title>
-      <link>http://blog.bessas.me/posts/using-gettext-in-django/</link>
+      <link>https://blog.bessas.me/posts/using-gettext-in-django/</link>
       <pubDate>Sat, 02 Nov 2013 11:20:24 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/using-gettext-in-django/</guid>
+      <guid>https://blog.bessas.me/posts/using-gettext-in-django/</guid>
       <description>Internationalization (i18n) is the process of enabling your software to be translated to other languages. This is done by making the software able to map all user-visible strings to their translations in a specific language and use them, when appropriate.
 The i18n toolset django uses is gettext and is enabled with the USE_I18N setting. Gettext works as follows: First, the developer marks the translation strings in the source code and then he runs the xgettext command to create the source PO file.</description>
     </item>
     
     <item>
       <title>Running your Django tests in memory with PostgreSQL</title>
-      <link>http://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/</link>
+      <link>https://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/</link>
       <pubDate>Sat, 19 Oct 2013 11:22:45 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/</guid>
+      <guid>https://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/</guid>
       <description>Many people advise to use sqlite for running your tests in django. The reason is that Django will automatically create the database in-memory, which speeds up any tests that query the database.
 However, this means that your test database is different than your production one, which might cause issues because of the differences between the databases, such as how they handle transactions. Besides, you might be using features of PostgreSQL that sqlite does not support.</description>
     </item>
     
     <item>
       <title>Forward attribute access for wrapper classes</title>
-      <link>http://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/</link>
+      <link>https://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/</link>
       <pubDate>Thu, 11 Jul 2013 11:24:31 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/</guid>
+      <guid>https://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/</guid>
       <description>Let&amp;rsquo;s say you want to create a wrapper class around a Django model. For convenience, you want your wrapper class to forward any direct field access calls to the model it wraps. That is, you want the following code to work:
 class MyModel(models.Model): slug = models.SlugField() class Wrapper(object): model = MyModel def __init__(self, w): self.w = w w = MyModel(slug=&#39;slug&#39;) w = Wrapper(w) print w.slug  This boils down to dynamically adding properties to the Wrapper class that forward the call to and return the value from the wrapped instance.</description>
     </item>
     
     <item>
       <title>Using functions in UPDATE queries from the Django ORM</title>
-      <link>http://blog.bessas.me/posts/using-functions-in-update-queries-django/</link>
+      <link>https://blog.bessas.me/posts/using-functions-in-update-queries-django/</link>
       <pubDate>Sat, 06 Apr 2013 11:26:49 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/using-functions-in-update-queries-django/</guid>
+      <guid>https://blog.bessas.me/posts/using-functions-in-update-queries-django/</guid>
       <description>PostgreSQL is a great database and comes with many great and really useful features, one of which is arrays. There are various apps that add support for arrays in the Django ORM, like django-dbarray, djorm-ext-pgarray and django-pg-extensions.
 However, those packages provide only fields that represent a PostgreSQL array (and maybe support for some of the operators), but not for the functions that PostgreSQL provides to manipulate arrays. Some of those functions are really useful, like adding elements to an array.</description>
     </item>
     
     <item>
       <title>Optimizing the operation of downloading files in Transifex</title>
-      <link>http://blog.bessas.me/posts/transifex-optimize-download/</link>
+      <link>https://blog.bessas.me/posts/transifex-optimize-download/</link>
       <pubDate>Sat, 02 Feb 2013 11:28:43 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/transifex-optimize-download/</guid>
+      <guid>https://blog.bessas.me/posts/transifex-optimize-download/</guid>
       <description>This is the story of taking a 80 seconds operation down to 2 seconds.
 One of the most common operations in Transifex is downloading a translation file (the second is uploading one). Since files are downloaded all the time, the process should be as fast as possible.
 Some projects, however, have files with thousands of entries, which presented us with some challenges: download times could take a lot of seconds depending on the size of the file — an issue for both our users and our servers :).</description>
@@ -128,10 +128,10 @@ Some projects, however, have files with thousands of entries, which presented us
     
     <item>
       <title>Testing with PostgreSQL</title>
-      <link>http://blog.bessas.me/posts/testing-with-postgresql/</link>
+      <link>https://blog.bessas.me/posts/testing-with-postgresql/</link>
       <pubDate>Fri, 06 Jan 2012 11:30:08 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/testing-with-postgresql/</guid>
+      <guid>https://blog.bessas.me/posts/testing-with-postgresql/</guid>
       <description>Transifex is a quite big application, counting tens of thousands of lines of Python, javascript and HTML code. In order to make sure the code works, it has an extensive test suite, which, obviously, takes quite some time to run.
 There are various things that can be done to make tests run faster. But let&amp;rsquo;s talk about databases.
 Transifex is built on top of Django and uses its ORM. As a result, it can use various database backends, like SQLite and PostgreSQL.</description>
@@ -139,10 +139,10 @@ Transifex is built on top of Django and uses its ORM. As a result, it can use va
     
     <item>
       <title>TimedRotatingFileHandler</title>
-      <link>http://blog.bessas.me/posts/timedrotatingfilehandler/</link>
+      <link>https://blog.bessas.me/posts/timedrotatingfilehandler/</link>
       <pubDate>Tue, 27 Dec 2011 11:31:39 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/timedrotatingfilehandler/</guid>
+      <guid>https://blog.bessas.me/posts/timedrotatingfilehandler/</guid>
       <description>(For future reference.)
 TimedRotatingFileHandler logs messages to a file and rotates it based on time values.
 Among the arguments it accepts is the when argument, which specifies the type of interval. One of the possible values is &#39;W&#39;, which specifies that the rollover should be done on a specific day of the week (with 0 being Monday). The day is specified by appending the necessary number ([0-6]) to when, like W0 for rotating the logs on Mondays.</description>
@@ -150,67 +150,67 @@ Among the arguments it accepts is the when argument, which specifies the type of
     
     <item>
       <title>Russ Cox&#39;s articles on regular expressions</title>
-      <link>http://blog.bessas.me/posts/russ-cox-regular-expressions/</link>
+      <link>https://blog.bessas.me/posts/russ-cox-regular-expressions/</link>
       <pubDate>Mon, 26 Dec 2011 11:33:09 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/russ-cox-regular-expressions/</guid>
+      <guid>https://blog.bessas.me/posts/russ-cox-regular-expressions/</guid>
       <description> http://swtch.com/~rsc/regexp/regexp1.html http://swtch.com/~rsc/regexp/regexp2.html http://swtch.com/~rsc/regexp/regexp3.html  </description>
     </item>
     
     <item>
       <title>DISTINCT in SQL</title>
-      <link>http://blog.bessas.me/posts/distinct-in-sql/</link>
+      <link>https://blog.bessas.me/posts/distinct-in-sql/</link>
       <pubDate>Sat, 12 Nov 2011 11:34:20 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/distinct-in-sql/</guid>
+      <guid>https://blog.bessas.me/posts/distinct-in-sql/</guid>
       <description>How does a RDBMS execute a query that has the DISTINCT keyword? The most effective way to ensure the uniqueness of the returned rows of a query is to sort them first; that is, to sort the result based on all fields. Depending on the number of fields SELECTed, this sorting could take a lot of time and need a lot of RAM. If the available RAM is not enough, the RDBMS will resort to using the disk, which is too slow.</description>
     </item>
     
     <item>
       <title>iptables in a hurry</title>
-      <link>http://blog.bessas.me/posts/iptables-in-a-hurry/</link>
+      <link>https://blog.bessas.me/posts/iptables-in-a-hurry/</link>
       <pubDate>Wed, 09 Nov 2011 11:35:21 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/iptables-in-a-hurry/</guid>
+      <guid>https://blog.bessas.me/posts/iptables-in-a-hurry/</guid>
       <description>Accepting incoming connections to a port only from specific hosts in the middle of the night:
 iptables -I INPUT -p tcp --dport $dport -j REJECT for ip in $ips; do iptables -I INPUT -p tcp --dport $dport --source $ip -j ACCEPT  We have to do it in the above order, since -I inserts the rule at the head of the list of rules.</description>
     </item>
     
     <item>
       <title>On database and code changes</title>
-      <link>http://blog.bessas.me/posts/on-database-and-code-changes/</link>
+      <link>https://blog.bessas.me/posts/on-database-and-code-changes/</link>
       <pubDate>Thu, 13 Oct 2011 11:36:36 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/on-database-and-code-changes/</guid>
+      <guid>https://blog.bessas.me/posts/on-database-and-code-changes/</guid>
       <description>Running a web application means that you always develop new features (and fix bugs) which should be deployed as soon as possible. This is the only way these enhancements reach your users. However, it also means that your application is used by people from all over the world, i.e., there is no point in time, when you can just shutdown the servers and do any necessary maintenance work; downtime should be avoided.</description>
     </item>
     
     <item>
       <title>On database schema changes</title>
-      <link>http://blog.bessas.me/posts/on-database-schema-changes/</link>
+      <link>https://blog.bessas.me/posts/on-database-schema-changes/</link>
       <pubDate>Sun, 09 Oct 2011 11:37:46 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/on-database-schema-changes/</guid>
+      <guid>https://blog.bessas.me/posts/on-database-schema-changes/</guid>
       <description>Working on a constantly evolving web application means that sooner or later you will have to change your database schema. One of the most difficult changes to make is to add a new column to a table.
 Let&amp;rsquo;s say you need to add a new column ncol to an existing table t in a database. The new column is of type INT, it cannot take the NULL value and defaults to the value 0.</description>
     </item>
     
     <item>
       <title>On reference tables</title>
-      <link>http://blog.bessas.me/posts/on-reference-tables/</link>
+      <link>https://blog.bessas.me/posts/on-reference-tables/</link>
       <pubDate>Tue, 04 Oct 2011 11:38:38 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/on-reference-tables/</guid>
+      <guid>https://blog.bessas.me/posts/on-reference-tables/</guid>
       <description>Working on a constantly evolving web application means that sooner or later you will have to change your database schema. One of the most difficult changes to make is to add a new column to a table.
 Let&amp;rsquo;s say you need to add a new column ncol to an existing table t in a database. The new column is of type INT, it cannot take the NULL value and defaults to the value 0.</description>
     </item>
     
     <item>
       <title>On database denormalization</title>
-      <link>http://blog.bessas.me/posts/on-database-denormalization/</link>
+      <link>https://blog.bessas.me/posts/on-database-denormalization/</link>
       <pubDate>Thu, 29 Sep 2011 11:39:32 +0200</pubDate>
       
-      <guid>http://blog.bessas.me/posts/on-database-denormalization/</guid>
+      <guid>https://blog.bessas.me/posts/on-database-denormalization/</guid>
       <description>One of the factors of a successful web application is its speed. However, the more successful the application is, the more serious performance issues it will have. As the users and their activity in the application and the data they manage begin to increase, every action becomes even slower, since it competes with more requests for the same resources (CPU, RAM, I/O) and has more data to manage. Usually, the problem lies in the database hits and the queries the app executes.</description>
     </item>
     

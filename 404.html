@@ -7,14 +7,15 @@
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <base href="http://blog.bessas.me/">
     
 
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400' rel='stylesheet' type='text/css'>
+    
+      <link href='https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400' rel='stylesheet' type='text/css'>
+    
 
-    <link rel="icon" type="image/png" href="/favicon_16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="/favicon_32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/favicon_128x128.png" sizes="128x128">
+    <link rel="icon" type="image/png" href="https://blog.bessas.me/favicon_16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://blog.bessas.me/favicon_32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://blog.bessas.me/favicon_128x128.png" sizes="128x128">
 
     <title>
       
@@ -33,6 +34,7 @@
     margin:0;
     padding:0;
     color: black;
+    text-decoration-skip: ink;
   }
 
   body {
@@ -56,6 +58,14 @@
     margin: 10px auto 10px auto;
     max-width: 100%;
     display: block;
+  }
+
+  .left-justify {
+    float: left;
+  }
+
+  .right-justify {
+    float:right;
   }
 
   pre, code {
@@ -378,13 +388,11 @@
 
 
     
-      <link href="http://blog.bessas.me/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
-    
   </head>
 
   <body>
     <section id=nav>
-      <h1><a href="/">That&#39;s weird...</a></h1>
+      <h1><a href="https://blog.bessas.me/">That&#39;s weird...</a></h1>
       <ul>
         
           <li><a href="https://github.com/mpessas/">Github</a></li>
@@ -396,12 +404,16 @@
     <a href=/>404</a>
   </section>
   
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-26208931-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-26208931-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </body>
 </html>

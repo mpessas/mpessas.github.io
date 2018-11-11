@@ -1,253 +1,565 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="no-referrer">
-
-
-<title>
-
-
-     Posts 
-
-</title>
-<link rel="canonical" href="http://blog.bessas.me/posts/">
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
-
-
-
-    <link rel="stylesheet" href="http://blog.bessas.me/css/reset.css">
-    <link rel="stylesheet" href="http://blog.bessas.me/css/pygments.css">
-    <link rel="stylesheet" href="http://blog.bessas.me/css/main.css">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     
 
+    
+      <link href='https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400' rel='stylesheet' type='text/css'>
+    
+
+    <link rel="icon" type="image/png" href="https://blog.bessas.me/favicon_16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://blog.bessas.me/favicon_32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://blog.bessas.me/favicon_128x128.png" sizes="128x128">
+
+    <title>
+      
+      
+         Posts 
+      
+    </title>
+    <link rel="canonical" href="https://blog.bessas.me/posts/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+    font-family:'Open Sans', 'Myriad Pro', Myriad, sans-serif;
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify {
+    float: left;
+  }
+
+  .right-justify {
+    float:right;
+  }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, time {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content time {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(2) {
+    float:right;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+</style>
 
 
+    
+      <link href="https://blog.bessas.me/posts/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
+    
+  </head>
 
-<link rel="shortcut icon"
-
-    href="http://blog.bessas.me/img/favicon.ico"
-
->
-
-
-
-  <link href="http://blog.bessas.me/posts/index.xml" rel="alternate" type="application/rss+xml" title="That&#39;s weird..." />
-
-
+  <body>
+    <section id=nav>
+      <h1><a href="https://blog.bessas.me/">That&#39;s weird...</a></h1>
+      <ul>
+        
+          <li><a href="https://github.com/mpessas/">Github</a></li>
+        
+      </ul>
+    </section>
 
 
-</head>
-
-
-<body lang="">
-
-<section class="header">
-    <div class="container">
-        <div class="content">
-            
-            <a href="http://blog.bessas.me/"><div class="name"></div></a>
-            
-            <nav>
-                <ul>
-                    <li class="nav-blog"><a href="http://blog.bessas.me/blog/">Blog</a></li>
-                    <li class="nav-about"><a href="http://blog.bessas.me/about/">About</a></li>
-                    <li class="nav-code"><a href="http://blog.bessas.me/code/">Code</a></li>
-                </ul>
-            </nav>
+<section id=content>
+  <ul class=posts_listing>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/request-ids-in-django/">Assigning a unique ID to each request in Django</a></h2>
+        <div id=date>
+          <time>April 2017</time>
         </div>
-    </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/pytest-and-migrations/">Speeding up the Django database creation with pytest</a></h2>
+        <div id=date>
+          <time>April 2017</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/another-reason-to-decouple-from-models/">Another reason to decouple your code from the models</a></h2>
+        <div id=date>
+          <time>March 2017</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/using-env-files/">Using .env files</a></h2>
+        <div id=date>
+          <time>August 2016</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/django-forms-models-and-dry/">Django, forms, models and DRY</a></h2>
+        <div id=date>
+          <time>November 2014</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/">Exposing objects in multiple represenations</a></h2>
+        <div id=date>
+          <time>February 2014</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/using-gettext-in-django/">Using gettext in Django</a></h2>
+        <div id=date>
+          <time>November 2013</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/">Running your Django tests in memory with PostgreSQL</a></h2>
+        <div id=date>
+          <time>October 2013</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/">Forward attribute access for wrapper classes</a></h2>
+        <div id=date>
+          <time>July 2013</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/using-functions-in-update-queries-django/">Using functions in UPDATE queries from the Django ORM</a></h2>
+        <div id=date>
+          <time>April 2013</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/transifex-optimize-download/">Optimizing the operation of downloading files in Transifex</a></h2>
+        <div id=date>
+          <time>February 2013</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/testing-with-postgresql/">Testing with PostgreSQL</a></h2>
+        <div id=date>
+          <time>January 2012</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/timedrotatingfilehandler/">TimedRotatingFileHandler</a></h2>
+        <div id=date>
+          <time>December 2011</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/russ-cox-regular-expressions/">Russ Cox&#39;s articles on regular expressions</a></h2>
+        <div id=date>
+          <time>December 2011</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/distinct-in-sql/">DISTINCT in SQL</a></h2>
+        <div id=date>
+          <time>November 2011</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/iptables-in-a-hurry/">iptables in a hurry</a></h2>
+        <div id=date>
+          <time>November 2011</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/on-database-and-code-changes/">On database and code changes</a></h2>
+        <div id=date>
+          <time>October 2011</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/on-database-schema-changes/">On database schema changes</a></h2>
+        <div id=date>
+          <time>October 2011</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/on-reference-tables/">On reference tables</a></h2>
+        <div id=date>
+          <time>October 2011</time>
+        </div>
+      </li>
+    
+      <li>
+        <h2><a href="https://blog.bessas.me/posts/on-database-denormalization/">On database denormalization</a></h2>
+        <div id=date>
+          <time>September 2011</time>
+        </div>
+      </li>
+    
+  </ul>
 </section>
 
-<section class="icons">
-    <div class="container">
-        <div class="content">
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-            <a href="http://blog.bessas.me/index.xml"><img class="icon" src="http://blog.bessas.me/img/rss.svg" alt="rss" /></a>
-        
-        </div>
-    </div>
-</section>
-
-<section class="main">
-    <div class="container">
-        <div class="content">
-            <div class="page-heading">Blog</div>
-            <ul>
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2016-08-13T10:25:01&#43;02:00'>Aug 13, 2016</time></span>
-    
-    <a href="http://blog.bessas.me/posts/using-env-files/"><span>Using .env files</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2014-11-23T09:42:37&#43;02:00'>Nov 23, 2014</time></span>
-    
-    <a href="http://blog.bessas.me/posts/django-forms-models-and-dry/"><span>Django, forms, models and DRY</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2014-02-11T11:11:02&#43;02:00'>Feb 11, 2014</time></span>
-    
-    <a href="http://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/"><span>Exposing objects in multiple represenations</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2013-11-02T11:20:24&#43;02:00'>Nov 2, 2013</time></span>
-    
-    <a href="http://blog.bessas.me/posts/using-gettext-in-django/"><span>Using gettext in Django</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2013-10-19T11:22:45&#43;02:00'>Oct 19, 2013</time></span>
-    
-    <a href="http://blog.bessas.me/posts/running-tests-in-memory-with-postgresql/"><span>Running your Django tests in memory with PostgreSQL</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2013-07-11T11:24:31&#43;02:00'>Jul 11, 2013</time></span>
-    
-    <a href="http://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/"><span>Forward attribute access for wrapper classes</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2013-04-06T11:26:49&#43;02:00'>Apr 6, 2013</time></span>
-    
-    <a href="http://blog.bessas.me/posts/using-functions-in-update-queries-django/"><span>Using functions in UPDATE queries from the Django ORM</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2013-02-02T11:28:43&#43;02:00'>Feb 2, 2013</time></span>
-    
-    <a href="http://blog.bessas.me/posts/transifex-optimize-download/"><span>Optimizing the operation of downloading files in Transifex</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2012-01-06T11:30:08&#43;02:00'>Jan 6, 2012</time></span>
-    
-    <a href="http://blog.bessas.me/posts/testing-with-postgresql/"><span>Testing with PostgreSQL</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2011-12-27T11:31:39&#43;02:00'>Dec 27, 2011</time></span>
-    
-    <a href="http://blog.bessas.me/posts/timedrotatingfilehandler/"><span>TimedRotatingFileHandler</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2011-12-26T11:33:09&#43;02:00'>Dec 26, 2011</time></span>
-    
-    <a href="http://blog.bessas.me/posts/russ-cox-regular-expressions/"><span>Russ Cox&#39;s articles on regular expressions</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2011-11-12T11:34:20&#43;02:00'>Nov 12, 2011</time></span>
-    
-    <a href="http://blog.bessas.me/posts/distinct-in-sql/"><span>DISTINCT in SQL</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2011-11-09T11:35:21&#43;02:00'>Nov 9, 2011</time></span>
-    
-    <a href="http://blog.bessas.me/posts/iptables-in-a-hurry/"><span>iptables in a hurry</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2011-10-13T11:36:36&#43;02:00'>Oct 13, 2011</time></span>
-    
-    <a href="http://blog.bessas.me/posts/on-database-and-code-changes/"><span>On database and code changes</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2011-10-09T11:37:46&#43;02:00'>Oct 9, 2011</time></span>
-    
-    <a href="http://blog.bessas.me/posts/on-database-schema-changes/"><span>On database schema changes</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2011-10-04T11:38:38&#43;02:00'>Oct 4, 2011</time></span>
-    
-    <a href="http://blog.bessas.me/posts/on-reference-tables/"><span>On reference tables</span></a>
-</li>
-
-                
-                <li class="post-item">
-    
-    <span class="meta"><time datetime='2011-09-29T11:39:32&#43;02:00'>Sep 29, 2011</time></span>
-    
-    <a href="http://blog.bessas.me/posts/on-database-denormalization/"><span>On database denormalization</span></a>
-</li>
-
-                
-            </ul>
-        </div>
-    </div>
-</section>
-
-
-
-
-
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-26208931-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </body>
 </html>
