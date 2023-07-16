@@ -1,71 +1,105 @@
 <!DOCTYPE html>
-<html lang="en-us">
-<head>
-    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<html><head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title>Using gettext in Django &middot; That&#39;s weird...</title>
-    <meta name="author" content="Apostolis Bessas">
-    
-    <meta name="generator" content="Hugo 0.56.3" />
-    <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
-    <!-- RSS autodiscovery -->
-    
-
-    <link rel="shortcut icon" href="https://blog.bessas.me/img/favicon.ico">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="https://blog.bessas.me/css/screen.css">
-    <link rel="stylesheet" href="https://blog.bessas.me/css/github.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
-    
+    <title>Using gettext in Django - That&#39;s weird...</title>
 
     
+    
+    <meta name="description" content="Internationalization (i18n) is the process of enabling your software to be translated to other languages. This is done by making the software able to map all user-visible strings to their translations in a specific language and use them, when appropriate.
+The i18n toolset django uses is gettext and is enabled with the USE_I18N setting. Gettext works as follows: First, the developer marks the translation strings in the source code and then he runs the xgettext command to create the source PO file." />
+    <meta name="author" content="" />
+    
 
-    <!-- Stylesheet for theme color -->
-    <style type="text/css">
-    a, a:visited {color: #3498db;}
-    .pagination a {color: #3498db;}
-    .gist .gist-file .gist-meta a:visited {color: #3498db !important;}
-    a:focus, a:hover {color: #2079b4;}
-    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #2079b4;}
-    .older-posts:hover, .newer-posts:hover {color: #2079b4;}
-</style>
-</head>
+    <link href="https://unpkg.com/@master/normal.css" rel="stylesheet">
+    <script src="https://unpkg.com/@master/style@1.5.0"></script>
+    <script src="https://unpkg.com/@master/styles@1.13.0"></script>
+    <script src="https://unpkg.com/master-styles-group"></script>
+    <script src="https://unpkg.com/themes.js"></script>
+    <script>window.themes = window.themes || new window.Themes()</script>
 
-<body class="home-template">
-    <header id="site-head">
-	
-	<h1 class="blog-title"><a href="https://blog.bessas.me/">That&rsquo;s weird&hellip;</a></h1>
-	
-	
-</header>
-    
-    
-    <main class="content" role="main">
-    
-<article class="post">
-    <header>
-        <h1 class="post-title">Using gettext in Django</h1>
-        <div class="post-meta">
-            <time datetime="02 November 2013">
-                02 November 2013
-            </time>
+    <style>
+        :root {
+            --font-sans: "Inter var", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+        }
+    </style></head>
+<body class="bg:fade-84@dark font:fade-16@dark font:sans">
+    <nav class="w:full h:90 fixed bg:fade-84/.95@dark bg:white z:1000">
+    <div class="
+        h:full
+        w:full
+        max-w:1200
+        mx:auto
+        px:32
+        d:flex
+        align-items:center
+    ">
+        <div>
+            <a href="https://blog.bessas.me/" class="mr-3 font:extralight">
+              
+              That&#39;s weird...
+              
+            </a>
         </div>
-    </header>
 
-    <section class="post-content">
-        
-
-<p>Internationalization (i18n) is the process of enabling your software to be
+        <div class="ml:auto">
+            
+            
+            
+        </div>
+    </div>
+</nav>
+<div class="d:flex flex:column@<=sm pt:90 px:24 jc:center gap:44 word-break:break-word">
+        <div class="max-w:700 w:full box:content-box">
+<article class="box:border-box pt:32">
+    <header class="mb:32">
+        <div class="font:40 font:extrabold">Using gettext in Django</div>
+        <div class="mt:16 f:fade-60">
+            <time>Nov 2, 2013</time>
+            </div>
+    </header><div class="
+    _:where(a):hover{text-decoration-color:fade}
+    _:where(a){text-decoration:2;underline;fade-10;_text-decoration-color:fade-70@dark}
+    _:where(blockquote){bl:5;solid;fade-76/.1;_bl:5;solid;fade-34/.1@dark}
+    _:where(code){font:90%;_v:middle}
+    _:where(code:not(.highlight_*,pre_*)){p:2;6;_r:4}
+    _:where(del){text-decoration:1;line-through;fade-68;_text-decoration-color:red-64@dark}
+    _:where(figcaption){text:14;_p:10;20;0;_width:fit;_mx:auto;_font:fade-56;_font:fade-57@dark}
+    _:where(h1){font:40;_font:extrabold}
+    _:where(h1,h2,h3)+:where(h1,h2,h3){mt:.5em}
+    _:where(h1,h2,h3,h4,h5,h6){mt:2em}
+    _:where(h2){mb:1em;_font:32}
+    _:where(h3){font:24}
+    _:where(h4){font:20}
+    _:where(h5){font:16}
+    _:where(h6){font:14}
+    _:where(li)::marker{font:fade-44;_font:fade-68@dark}
+    _:where(li){pl:.375em}
+    _:where(mark){text-decoration:1;underline;#fce016;_bg:transparent;_text-decoration-color:rgb(252;224;22/.5)@dark}
+    _:where(p,li){font:fade-76;_font:16;_line-height:1.65;_font:fade-34@dark}
+    _:where(p,pre,blockquote,figure,ul,ol,table){my:1.125em}
+    >:first-child{mt:0!}
+    _:where(pre){p:20;_r:8;_overflow:auto}
+    _:where(pre,code:not(.highlight_*)){bg:fade-2;_bg:fade-92!@dark}
+    _:where(strong,b,a,code:not(.highlight_*),mark,del){font:fade-92;_font:fade-12@dark}
+    _:where(table){width:full;_border-spacing:0}
+    _:where(td){v:baseline}
+    _:where(td,th):first-child{pl:0}
+    _:where(td,th):last-child{pr:0}
+    _:where(td,th){bb:1;solid;fade-92/.06;_p:6;_b:fade-4/.04@dark}
+    _:where(th){font:fade-78;_font:14;_text:left;_font:fade-12@dark}
+    _:where(th,p_code,li_code,a,mark){font:semibold;_font:medium@dark}
+    _:where(ul){list-style-type:disc}
+    _:where(ul,ol,blockquote){pl:1.5em}
+    _:where(video,img){max-width:full}
+    _:where(a,mark){text-underline-offset:3}
+    _:where(hr){h:2;_bg:fade-10;_bg:fade-70@dark;_my:3em}
+"><p>Internationalization (i18n) is the process of enabling your software to be
 translated to other languages. This is done by making the software able to map
 all user-visible strings to their translations in a specific language and use
 them, when appropriate.</p>
-
 <p>The i18n toolset django uses is <strong>gettext</strong> and is enabled with the <code>USE_I18N</code>
 setting. Gettext works as follows: First, the developer marks the <strong>translation
 strings</strong> in the source code and then he runs the <code>xgettext</code> command to create
@@ -74,24 +108,19 @@ the strings that were marked as translation strings and
 extracts them into a PO file, which can be translated to the target languages.
 The last step is to <em>compile</em> the PO files into binary message files (.mo files) with
 the <code>msgfmt</code> command.</p>
-
 <p>Django makes sure to ease the process by providing its own management commands:
 <code>makemessages</code> that extracts the strings from the source code and
 <code>compilemessages</code> that converts the files into the binary ones. It also expects to find the PO files for a language under the directory
 <code>locale/&lt;locale&gt;/LC_MESSAGES/django.po</code>, where <code>&lt;locale&gt;</code> is the language code.</p>
-
 <p>In the runtime, whenever a gettext function is used, it will use the PO file
 that corresponds to the currently active locale and return the correct
 translation that corresponds to this string. If no translation is found, the
 original string is used instead.</p>
-
 <h2 id="the-gettext-functions">The gettext functions</h2>
-
 <p>The following is a list of the most important gettext functions that django
 exposes and can support unicode strings correctly. Keep in mind that they all
 mark the containing <em>literal string</em> as translatable, that is, you need to pass
 the string itself as an argument, not a variable.</p>
-
 <ul>
 <li><code>ugettext</code>: The function returns the   translation for the currently selected language.</li>
 <li><code>ugettext_lazy</code>: The function marks the string as translation string, but only
@@ -100,20 +129,17 @@ when rendering a template.</li>
 <li><code>ugettext_noop</code>: This function only marks a string as translation string, it
 does not have any other effect; that is, it always returns the string itself.</li>
 </ul>
-
 <p>The <code>ugettext_lazy</code> function is useful in cases, where a string needs to be
 marked as translation string, but the user&rsquo;s locale is not active yet. For
 instance, all strings in a model or in the settings are loaded, when the django
 process is started. During startup, there is no user request that sets the
 active locale. By using the <code>ugettext_lazy</code> function, you ensure that the
 translations will be actually fetched only during a user request, when the locale is known.</p>
-
 <p>Given the <code>ugettext_lazy</code> function, the <code>ugettext_noop</code> function seems to be
 redundant. However, it is really useful in cases that you want to mark a string
 as translation string, but need to use it in other contexts in its original form
 as well, such as an error message that has to be logged, too. For instance, take
 the following view that returns an error message to the user (it is a standard practice to import the gettext functions as &ldquo;<code>_</code>&rdquo;):</p>
-
 <pre><code>import logging
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
@@ -123,11 +149,9 @@ def view(request):
     logging.error(msg)
     return HttpResponse(msg)
 </code></pre>
-
 <p>The response will contain the translated error message, but so will the logs. In
 order to circumvent this issue, you can use the <code>ugettext_noop</code> function
 instead:</p>
-
 <pre><code>import logging
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _, ugettext_noop as _noop
@@ -137,7 +161,6 @@ def view(request):
     logging.error(msg)
     return HttpResponse(_(msg))
 </code></pre>
-
 <p>The <code>ugettext_noop</code> will force gettext to mark the error message as translation
 string, but it will return the original (English) string. As a result, the log
 messages will use the English phrase. However, we still want to present the
@@ -145,101 +168,39 @@ translated message to the user. We achieve this by using the <code>ugettext</cod
 to force evaluating the string and fetching the translated message. This
 technique is especially useful for exception messages, that need to be logged in
 a higher layer of the codebase but also presented to the user.</p>
-
 <h2 id="plural-support">Plural support</h2>
-
 <p>Most languages have two <strong>plural forms</strong>: singular and plural. Some languages,
 however, have only one, like Japanese. Others can have up to six, like Arabic.</p>
-
 <p>Which plural  form to use  depends on the number of objects the phrase refers to.  For instance, English  uses the
 singular  form, when  the phrase  refers  to one  object (&ldquo;1  language&rdquo;), and  the
 plural, when it refers to none (&ldquo;no languages&rdquo;) or more than one (&ldquo;2 languages&rdquo;). Other languages have different rules.</p>
-
 <p>Django supports plurals with the <code>n</code> family of gettext functions: <code>ungettext</code>
 and <code>ungettext_lazy</code>.</p>
-
 <h2 id="context-support">Context support</h2>
-
 <p>Gettext allows developers to define the <strong>context</strong> of a string. For instance,
 the word &ldquo;Read&rdquo; can mean &ldquo;read an email&rdquo; or &ldquo;emails read&rdquo;. The developer can
 define and explain the context of a string to differentiate between the two uses. This way, gettext will create
 separate entries for the word &ldquo;read&rdquo;, one for each context.</p>
-
 <p>This is supported in django with the <code>p</code> family of gettext functions:
 <code>pgettext</code>, <code>pgettext_lazy</code>, <code>npgettext</code> and <code>npgettext_lazy</code>.</p>
-
 <h2 id="support-in-templates">Support in templates</h2>
-
 <p>Django provides two <em>templatetags</em> for marking translation strings in templates:
 <code>trans</code> and <code>blocktrans</code>. The main difference is that the <code>trans</code> templatetag
 only supports simple strings, while the <code>blocktrans</code> templatetag supports
 variable substitution (placeholders) as well.</p>
-
 <p>Both templatetags support most of the gettext features. One thing to keep in
 mind for the <code>blocktrans</code> templatetag, though, is that the containing string is
 extracted as is. This means that the string will be extracted by gettext with
 any newline and space characters or indentation it might have. For this reason,
 all indentation should be avoided.</p>
-
 <p>More details for how to internationalize your web application can be found at
 <a href="https://docs.djangoproject.com/en/dev/topics/i18n/translation/">django&rsquo;s documentation</a>.</p>
-
-    </section>
-
-    
-</article>
-
-    </main>
-
-    <footer class="site-footer">
-	<div class="inner">
-		<section class="footer-social">
-      
-      
-      
-      
-      
-      
-      <a href="//github.com/mpessas" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
-      
-      
-      
-      
-  </section>
-
-		<section class="copyright">&copy; 2019 <a href="https://blog.bessas.me/">Apostolis Bessas</a>. </section>
-	</div>
-</footer>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://blog.bessas.me/js/index.js"></script>
-<script src="https://blog.bessas.me/js/smooth-scroll.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
-
-
-<script>
-    smoothScroll.init({
-        speed: 800,
-        easing: 'easeInOutCubic',
-        updateURL: false,
-        offset: 125,
-    });
-</script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-26208931-1', 'auto');
-	ga('set', 'anonymizeIp', true);
-	ga('send', 'pageview');
-}
-</script>
-
+</div></article>
+<footer class="py:24">
+    <div class="f:fade-30 f:14 mb:8"></div>
+    <div class="f:fade-60 f:12">Theme <a class="f:bold" href="https://github.com/serkodev/holy" _target="_blank">Holy</a></div>
+</footer></div>
+    </div>
 </body>
+
 </html>

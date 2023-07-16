@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on That&#39;s weird...</title>
@@ -6,11 +6,7 @@
     <description>Recent content in Posts on That&#39;s weird...</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 11 Nov 2018 12:07:57 +0200</lastBuildDate>
-    
-	<atom:link href="https://blog.bessas.me/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 11 Nov 2018 12:07:57 +0200</lastBuildDate><atom:link href="https://blog.bessas.me/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Rules for writing tests</title>
       <link>https://blog.bessas.me/posts/rules-for-writing-tests/</link>
@@ -18,7 +14,7 @@
       
       <guid>https://blog.bessas.me/posts/rules-for-writing-tests/</guid>
       <description>When writing tests for a (Python) codebase:
- We use pytest fixtures. They are way more flexible than an inheritance-based system and allow for fine-grained dependencies. Every test case should test for a single behavior. This usually means having a single assert statement in a test case. This makes it easier to know why a test failed and what behavior is tested. The structure of the test suite on the filesystem should mirror that of the codebase, so as to be quick to find the tests for a piece of code.</description>
+We use pytest fixtures. They are way more flexible than an inheritance-based system and allow for fine-grained dependencies. Every test case should test for a single behavior. This usually means having a single assert statement in a test case. This makes it easier to know why a test failed and what behavior is tested. The structure of the test suite on the filesystem should mirror that of the codebase, so as to be quick to find the tests for a piece of code.</description>
     </item>
     
     <item>
@@ -61,7 +57,7 @@ If you want to do the change without incurring any downtime, the best way to alt
       
       <guid>https://blog.bessas.me/posts/using-env-files/</guid>
       <description>Enabling the environment variables in a bash script:
-env $(cat .env.test | xargs)  </description>
+env $(cat .env.test | xargs) </description>
     </item>
     
     <item>
@@ -72,7 +68,7 @@ env $(cat .env.test | xargs)  </description>
       <guid>https://blog.bessas.me/posts/django-forms-models-and-dry/</guid>
       <description>Django provides a forms package to make working with forms in web applications easier.
 Forms work by subclassing the Form class and defining the fields in the class:
-class MyForm(forms.Form): field1 = forms.CharField(max_length=10) field2 = forms.IntegerField()  But in most cases a form mirrors a model in the database, where you have already declared the properties for those fields. For this use case, Django provides ModelForm to use as a base class.</description>
+class MyForm(forms.Form): field1 = forms.CharField(max_length=10) field2 = forms.IntegerField() But in most cases a form mirrors a model in the database, where you have already declared the properties for those fields. For this use case, Django provides ModelForm to use as a base class.</description>
     </item>
     
     <item>
@@ -112,7 +108,7 @@ However, this means that your test database is different than your production on
       
       <guid>https://blog.bessas.me/posts/forward-attribute-access-for-wrapper-classes/</guid>
       <description>Let&amp;rsquo;s say you want to create a wrapper class around a Django model. For convenience, you want your wrapper class to forward any direct field access calls to the model it wraps. That is, you want the following code to work:
-class MyModel(models.Model): slug = models.SlugField() class Wrapper(object): model = MyModel def __init__(self, w): self.w = w w = MyModel(slug=&#39;slug&#39;) w = Wrapper(w) print w.slug  This boils down to dynamically adding properties to the Wrapper class that forward the call to and return the value from the wrapped instance.</description>
+class MyModel(models.Model): slug = models.SlugField() class Wrapper(object): model = MyModel def __init__(self, w): self.w = w w = MyModel(slug=&#39;slug&#39;) w = Wrapper(w) print w.slug This boils down to dynamically adding properties to the Wrapper class that forward the call to and return the value from the wrapped instance.</description>
     </item>
     
     <item>
@@ -164,7 +160,7 @@ Among the arguments it accepts is the when argument, which specifies the type of
       <pubDate>Mon, 26 Dec 2011 11:33:09 +0200</pubDate>
       
       <guid>https://blog.bessas.me/posts/russ-cox-regular-expressions/</guid>
-      <description> http://swtch.com/~rsc/regexp/regexp1.html http://swtch.com/~rsc/regexp/regexp2.html http://swtch.com/~rsc/regexp/regexp3.html  </description>
+      <description> http://swtch.com/~rsc/regexp/regexp1.html http://swtch.com/~rsc/regexp/regexp2.html http://swtch.com/~rsc/regexp/regexp3.html </description>
     </item>
     
     <item>
@@ -183,7 +179,7 @@ Among the arguments it accepts is the when argument, which specifies the type of
       
       <guid>https://blog.bessas.me/posts/iptables-in-a-hurry/</guid>
       <description>Accepting incoming connections to a port only from specific hosts in the middle of the night:
-iptables -I INPUT -p tcp --dport $dport -j REJECT for ip in $ips; do iptables -I INPUT -p tcp --dport $dport --source $ip -j ACCEPT  We have to do it in the above order, since -I inserts the rule at the head of the list of rules.</description>
+iptables -I INPUT -p tcp --dport $dport -j REJECT for ip in $ips; do iptables -I INPUT -p tcp --dport $dport --source $ip -j ACCEPT We have to do it in the above order, since -I inserts the rule at the head of the list of rules.</description>
     </item>
     
     <item>
