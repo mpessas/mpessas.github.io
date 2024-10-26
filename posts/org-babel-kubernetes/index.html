@@ -51,7 +51,7 @@
   />
 
   
-  <title>That&#39;s weird...</title>
+  <title>Org Babel Kubernetes - That&#39;s weird...</title>
 
   
   <meta name="theme-color" />
@@ -60,11 +60,8 @@
   
   
   
-  
-  <meta
-    name="description"
-    content="A personal blog"
-  />
+  <meta name="description" content="If you use org-babel, you can ask it to run any code blocks in a running kubernetes pod using tramp&rsquo;s support for kubernetes. This can be achieved with the :dir option:
+#&#43;begin_src python :results output :dir /kubernetes:container-name.pod-name:/path/to/dir/ print(&#34;Hello, world!&#34;) #&#43;end_src You may need to set the options tramp-kubernetes-context and tramp-kubernetes-namespace first." />
   <meta name="author" content="That&#39;s weird..." />
   
 
@@ -101,6 +98,12 @@
 
   
   
+  <script
+    defer
+    src="https://blog.bessas.me/highlight.min.js"
+    onload="hljs.initHighlightingOnLoad();"
+  ></script>
+  
 
   
   
@@ -128,32 +131,36 @@
 
   
   
-  <meta itemprop="name" content="That&#39;s weird...">
+  <meta itemprop="name" content="Org Babel Kubernetes">
+  <meta itemprop="description" content="If you use org-babel, you can ask it to run any code blocks in a running kubernetes pod using tramp’s support for kubernetes. This can be achieved with the :dir option:
+#&#43;begin_src python :results output :dir /kubernetes:container-name.pod-name:/path/to/dir/ print(&#34;Hello, world!&#34;) #&#43;end_src You may need to set the options tramp-kubernetes-context and tramp-kubernetes-namespace first.">
+  <meta itemprop="datePublished" content="2024-10-26T08:58:25+03:00">
   <meta itemprop="dateModified" content="2024-10-26T08:58:25+03:00">
+  <meta itemprop="wordCount" content="51">
   
-  <meta property="og:url" content="https://blog.bessas.me/">
+  <meta property="og:url" content="https://blog.bessas.me/posts/org-babel-kubernetes/">
   <meta property="og:site_name" content="That&#39;s weird...">
-  <meta property="og:title" content="That&#39;s weird...">
+  <meta property="og:title" content="Org Babel Kubernetes">
+  <meta property="og:description" content="If you use org-babel, you can ask it to run any code blocks in a running kubernetes pod using tramp’s support for kubernetes. This can be achieved with the :dir option:
+#&#43;begin_src python :results output :dir /kubernetes:container-name.pod-name:/path/to/dir/ print(&#34;Hello, world!&#34;) #&#43;end_src You may need to set the options tramp-kubernetes-context and tramp-kubernetes-namespace first.">
   <meta property="og:locale" content="en_us">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-10-26T08:58:25+03:00">
+    <meta property="article:modified_time" content="2024-10-26T08:58:25+03:00">
 
   
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="That&#39;s weird...">
+  <meta name="twitter:title" content="Org Babel Kubernetes">
+  <meta name="twitter:description" content="If you use org-babel, you can ask it to run any code blocks in a running kubernetes pod using tramp’s support for kubernetes. This can be achieved with the :dir option:
+#&#43;begin_src python :results output :dir /kubernetes:container-name.pod-name:/path/to/dir/ print(&#34;Hello, world!&#34;) #&#43;end_src You may need to set the options tramp-kubernetes-context and tramp-kubernetes-namespace first.">
 
   
   
-  <link
-    rel="alternate"
-    type="application/rss&#43;xml"
-    href="https://blog.bessas.me/index.xml"
-    title="That&#39;s weird..."
-  />
-  
 
   
-  <link rel="canonical" href="https://blog.bessas.me/" />
+  <link rel="canonical" href="https://blog.bessas.me/posts/org-babel-kubernetes/" />
   
   
 </head>
@@ -290,53 +297,60 @@
     >
       
 
+<article>
+  <header class="mb-14">
+    <h1 class="!my-0 pb-2.5">Org Babel Kubernetes</h1>
 
+    
+    <div class="text-xs antialiased opacity-60">
+      
+      <time>Oct 26, 2024</time>
+      
+      
+      
+      
+    </div>
+    
+  </header>
 
-
-
-
-
-
-
-
-
- 
-
-
-
-
-<section class="relative my-10 first-of-type:mt-0 last-of-type:mb-0">
-  
-  <h2 class="!my-0">On reference tables</h2>
-  <time class="text-xs antialiased opacity-60"
-    >Oct 4, 2011</time
-  >
-  <a class="absolute inset-0 text-[0]" href="https://blog.bessas.me/posts/on-reference-tables/">On reference tables</a>
+  <section><p>If you use <a href="https://orgmode.org/worg/org-contrib/babel/">org-babel</a>, you can ask it to run any code blocks in a running kubernetes pod using <a href="https://www.gnu.org/software/tramp/#index-method-kubernetes">tramp&rsquo;s support for kubernetes</a>. This can be achieved with the <code>:dir</code> option:</p>
+<div class="highlight"><pre tabindex="0" style="color:#000;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-orgmode" data-lang="orgmode"><span style="display:flex;"><span><span style="color:#505050">#+begin_src </span><span style="color:#505050">python</span><span style="color:#505050"> :results output :dir /kubernetes:container-name.pod-name:/path/to/dir/
+</span></span></span><span style="display:flex;"><span><span style="color:#505050"></span><span style="color:#8f0075">print</span>(<span style="color:#2544bb">&#34;Hello, world!&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#505050">#+end_src</span>
+</span></span></code></pre></div><p>You may need to set the options <code>tramp-kubernetes-context</code> and <code>tramp-kubernetes-namespace</code> first.</p>
 </section>
 
-
-
-
-
-<section class="relative my-10 first-of-type:mt-0 last-of-type:mb-0">
   
-  <h2 class="!my-0">On database denormalization</h2>
-  <time class="text-xs antialiased opacity-60"
-    >Sep 29, 2011</time
+  
+
+  
+  
+  
+  
+  <nav
+    class="mt-24 flex overflow-hidden rounded-xl bg-black/[3%] text-lg !leading-[1.2] *:flex *:w-1/2 *:items-center *:p-5 *:font-medium *:no-underline dark:bg-white/[8%] [&>*:hover]:bg-black/[2%] dark:[&>*:hover]:bg-white/[3%]"
   >
-  <a class="absolute inset-0 text-[0]" href="https://blog.bessas.me/posts/on-database-denormalization/">On database denormalization</a>
-</section>
-
-
-
-
-<nav class="mt-14 flex">
-  
-  <a class="btn" href="/page/2/">← Prev Page</a>
+    
+    
+    <a class="ltr:ml-auto rtl:mr-auto justify-end pl-3" href="https://blog.bessas.me/posts/rules-for-writing-tests/"
+      ><span>Rules for writing tests</span><span class="ltr:ml-1.5 rtl:mr-1.5">→</span></a
+    >
+    
+  </nav>
   
   
-</nav>
 
+  
+  
+
+  
+  
+
+  
+
+
+  
+</article>
 
 
     </main>

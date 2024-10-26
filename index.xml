@@ -6,8 +6,15 @@
     <description>Recent content on That&#39;s weird...</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 26 Oct 2024 08:41:13 +0300</lastBuildDate>
+    <lastBuildDate>Sat, 26 Oct 2024 08:58:25 +0300</lastBuildDate>
     <atom:link href="https://blog.bessas.me/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Org Babel Kubernetes</title>
+      <link>https://blog.bessas.me/posts/org-babel-kubernetes/</link>
+      <pubDate>Sat, 26 Oct 2024 08:58:25 +0300</pubDate>
+      <guid>https://blog.bessas.me/posts/org-babel-kubernetes/</guid>
+      <description>If you use org-babel, you can ask it to run any code blocks in a running kubernetes pod using tramp&amp;rsquo;s support for kubernetes. This can be achieved with the :dir option:&#xA;#+begin_src python :results output :dir /kubernetes:container-name.pod-name:/path/to/dir/ print(&amp;#34;Hello, world!&amp;#34;) #+end_src You may need to set the options tramp-kubernetes-context and tramp-kubernetes-namespace first.</description>
+    </item>
     <item>
       <title>About</title>
       <link>https://blog.bessas.me/about/</link>
