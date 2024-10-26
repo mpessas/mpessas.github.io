@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
+
+
+
+
+
 
 
 
@@ -33,8 +38,9 @@
 
 <html
   class="not-ready lg:text-base"
-  style="--bg: #fbfbfb"
+  style="--bg: #faf8f1"
   lang="en-us"
+  dir="ltr"
 >
   <head>
   <meta charset="utf-8" />
@@ -53,9 +59,10 @@
   
   
   
+  
   <meta name="description" content="The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
 The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes." />
-  <meta name="author" content="Apostolis Bessas" />
+  <meta name="author" content="That&#39;s weird..." />
   
 
   
@@ -67,6 +74,30 @@ The needs of each interface may be different, though. The API, for instance, may
   <link rel="preload stylesheet" as="style" href="https://blog.bessas.me/main.min.css" />
 
   
+  
+  
+  
+  
+  <link rel="preload" as="image" href="https://blog.bessas.me/theme.png" />
+
+  
+  
+  
+  
+  
+
+  
+  
+  <link rel="preload" as="image" href="https://blog.bessas.me/github.svg" />
+  
+  <link rel="preload" as="image" href="https://blog.bessas.me/linkedin.svg" />
+  
+  <link rel="preload" as="image" href="https://blog.bessas.me/rss.svg" />
+  
+  
+
+  
+  
   <script
     defer
     src="https://blog.bessas.me/highlight.min.js"
@@ -75,89 +106,86 @@ The needs of each interface may be different, though. The API, for instance, may
   
 
   
-   
-  <link rel="preload" as="image" href="https://blog.bessas.me/theme.png" />
-
-  
-  
   
   
 
   
-  <link rel="preload" as="image" href="https://blog.bessas.me/github.svg" />
-  
-  <link rel="preload" as="image" href="https://blog.bessas.me/rss.svg" />
-  
-  
+  <link
+    rel="icon"
+    href="https://blog.bessas.me/favicon.ico"
+  />
+  <link
+    rel="apple-touch-icon"
+    href="https://blog.bessas.me/apple-touch-icon.png"
+  />
 
   
-  
-
-  
-  <link rel="icon" href="https://blog.bessas.me/favicon.ico" />
-  <link rel="apple-touch-icon" href="https://blog.bessas.me/apple-touch-icon.png" />
-
-  
-  <meta name="generator" content="Hugo 0.101.0" />
-
-  
-  
+  <meta name="generator" content="Hugo 0.126.2">
 
   
   
   
   
   
-  
-  
-  <meta property="og:title" content="Exposing objects in multiple represenations" />
-<meta property="og:description" content="The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
-The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2014-02-11T11:11:02+02:00" />
-<meta property="article:modified_time" content="2014-02-11T11:11:02+02:00" />
 
 
+  
   
   <meta itemprop="name" content="Exposing objects in multiple represenations">
-<meta itemprop="description" content="The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
-The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes."><meta itemprop="datePublished" content="2014-02-11T11:11:02+02:00" />
-<meta itemprop="dateModified" content="2014-02-11T11:11:02+02:00" />
-<meta itemprop="wordCount" content="789">
-<meta itemprop="keywords" content="" />
+  <meta itemprop="description" content="The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
+The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes.">
+  <meta itemprop="datePublished" content="2014-02-11T11:11:02+02:00">
+  <meta itemprop="dateModified" content="2014-02-11T11:11:02+02:00">
+  <meta itemprop="wordCount" content="789">
   
-  <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Exposing objects in multiple represenations"/>
-<meta name="twitter:description" content="The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
-The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes."/>
+  <meta property="og:url" content="https://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/">
+  <meta property="og:site_name" content="That&#39;s weird...">
+  <meta property="og:title" content="Exposing objects in multiple represenations">
+  <meta property="og:description" content="The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
+The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2014-02-11T11:11:02+02:00">
+    <meta property="article:modified_time" content="2014-02-11T11:11:02+02:00">
 
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Exposing objects in multiple represenations">
+  <meta name="twitter:description" content="The need for multiple representations Many applications have multiple interfaces: an API that others use to access the application programmatically or a rich web client built with JavaScript for the end-users and so on.
+The needs of each interface may be different, though. The API, for instance, may need to expose all details of a specific object, but the web interface only needs certain details and maybe some extra attributes.">
+
+  
+  
+
+  
+  <link rel="canonical" href="https://blog.bessas.me/posts/exposing-objects-in-multiple-represenations/" />
   
   
 </head>
 
   <body class="text-black duration-200 ease-out dark:text-white">
-    <header class="mx-auto flex h-[4.5rem] max-w-3xl px-8 lg:justify-center">
-  <div class="relative z-50 mr-auto flex items-center">
-    <a
-      class="-translate-x-[1px] -translate-y-[1px] text-2xl font-semibold"
-      href="https://blog.bessas.me/"
+    <header class="mx-auto flex h-[4.5rem] max-w-[--w] px-8 lg:justify-center">
+  <div class="relative z-50 ltr:mr-auto rtl:ml-auto flex items-center">
+    <a class="-translate-y-[1px] text-2xl font-medium" href="https://blog.bessas.me/"
       >That&#39;s weird...</a
     >
     <div
-      class="btn-dark text-[0] ml-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.png)_left_center/_auto_theme('spacing.6')_no-repeat] [transition:_background-position_0.4s_steps(5)] dark:[background-position:right]"
+      class="btn-dark text-[0] ltr:ml-4 rtl:mr-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.png)_left_center/_auto_theme('spacing.6')_no-repeat] [transition:_background-position_0.4s_steps(5)] dark:[background-position:right]"
       role="button"
       aria-label="Dark"
     ></div>
   </div>
 
   <div
-    class="btn-menu relative z-50 -mr-8 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+    class="btn-menu relative z-50 ltr:-mr-8 rtl:-ml-8 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
     role="button"
     aria-label="Menu"
   ></div>
 
   
+
   <script>
     
     const htmlClass = document.documentElement.classList;
@@ -173,7 +201,7 @@ The needs of each interface may be different, though. The API, for instance, may
 
     
     const metaTheme = document.querySelector('meta[name="theme-color"]');
-    const lightBg = '#fbfbfb'.replace(/"/g, '');
+    const lightBg = '#faf8f1'.replace(/"/g, '');
     const setDark = (isDark) => {
       metaTheme.setAttribute('content', isDark ? '#000' : lightBg);
       htmlClass[isDark ? 'add' : 'remove']('dark');
@@ -206,14 +234,30 @@ The needs of each interface may be different, though. The API, for instance, may
   >
     
     
+    <nav class="lg:ml-12 lg:flex lg:flex-row lg:items-center lg:space-x-10 rtl:space-x-reverse">
+      
+      <a
+        class="block text-center text-xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/about/"
+        >About</a
+      >
+      
+      <a
+        class="block text-center text-xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/posts/"
+        >Posts</a
+      >
+      
+    </nav>
+    
 
     
     <nav
-      class="mt-12 flex justify-center space-x-10 dark:invert lg:ml-12 lg:mt-0 lg:items-center lg:space-x-6"
+      class="mt-12 flex justify-center space-x-10 rtl:space-x-reverse dark:invert ltr:lg:ml-14 rtl:lg:mr-14 lg:mt-0 lg:items-center"
     >
       
       <a
-        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        class="h-7 w-7 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
         style="--url: url(./github.svg)"
         href="https://github.com/mpessas"
         target="_blank"
@@ -223,7 +267,17 @@ The needs of each interface may be different, though. The API, for instance, may
       </a>
       
       <a
-        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        class="h-7 w-7 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./linkedin.svg)"
+        href="https://linkedin.com/in/bessas"
+        target="_blank"
+        rel="me"
+      >
+        linkedin
+      </a>
+      
+      <a
+        class="h-7 w-7 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
         style="--url: url(./rss.svg)"
         href="https://blog.bessas.me/index.xml"
         target="_blank"
@@ -239,24 +293,21 @@ The needs of each interface may be different, though. The API, for instance, may
 
 
     <main
-      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl px-8 pb-16 pt-12 dark:prose-invert"
+      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-[--w] px-8 pb-16 pt-14 dark:prose-invert"
     >
       
 
 <article>
-  <header class="mb-16">
+  <header class="mb-14">
     <h1 class="!my-0 pb-2.5">Exposing objects in multiple represenations</h1>
 
     
-    <div class="text-sm antialiased opacity-60">
+    <div class="text-xs antialiased opacity-60">
       
       <time>Feb 11, 2014</time>
       
       
       
-      
-      <span class="mx-1">&middot;</span>
-      <span>Apostolis Bessas</span>
       
     </div>
     
@@ -418,28 +469,33 @@ higher quality.</p>
   
   
   
-  <nav class="mt-24 flex rounded-lg bg-black/[3%] text-lg dark:bg-white/[8%]">
+  
+  <nav
+    class="mt-24 flex overflow-hidden rounded-xl bg-black/[3%] text-lg !leading-[1.2] *:flex *:w-1/2 *:items-center *:p-5 *:font-medium *:no-underline dark:bg-white/[8%] [&>*:hover]:bg-black/[2%] dark:[&>*:hover]:bg-white/[3%]"
+  >
     
-    <a
-      class="flex w-1/2 items-center rounded-l-md p-6 pr-3 font-semibold no-underline hover:bg-black/[2%] dark:hover:bg-white/[3%]"
-      href="https://blog.bessas.me/posts/django-forms-models-and-dry/"
-      ><span class="mr-1.5">←</span><span>Django, forms, models and DRY</span></a
+    <a class="ltr:pr-3 rtl:pl-3" href="https://blog.bessas.me/posts/django-forms-models-and-dry/"
+      ><span class="ltr:mr-1.5 rtl:ml-1.5">←</span><span>Django, forms, models and DRY</span></a
     >
     
     
-    <a
-      class="ml-auto flex w-1/2 items-center justify-end rounded-r-md p-6 pl-3 font-semibold no-underline hover:bg-black/[2%] dark:hover:bg-white/[3%]"
-      href="https://blog.bessas.me/posts/using-gettext-in-django/"
-      ><span>Using gettext in Django</span><span class="ml-1.5">→</span></a
+    <a class="ltr:ml-auto rtl:mr-auto justify-end pl-3" href="https://blog.bessas.me/posts/using-gettext-in-django/"
+      ><span>Using gettext in Django</span><span class="ltr:ml-1.5 rtl:mr-1.5">→</span></a
     >
     
   </nav>
   
+  
+
+  
+  
 
   
   
 
   
+
+
   
 </article>
 
@@ -447,11 +503,13 @@ higher quality.</p>
     </main>
 
     <footer
-  class="opaco mx-auto flex h-[4.5rem] max-w-3xl items-center px-8 text-[0.9em] opacity-60"
+  class="mx-auto flex h-[4.5rem] max-w-[--w] items-center px-8 text-xs uppercase tracking-wider opacity-60"
 >
   <div class="mr-auto">
-    &copy; 2023
-    <a class="link" href="https://blog.bessas.me/">Apostolis Bessas</a>
+  
+    &copy; 2024
+    <a class="link" href="https://blog.bessas.me/">That&#39;s weird...</a>
+  
   </div>
 </footer>
 

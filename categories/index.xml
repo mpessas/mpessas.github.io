@@ -4,7 +4,8 @@
     <title>Categories on That&#39;s weird...</title>
     <link>https://blog.bessas.me/categories/</link>
     <description>Recent content in Categories on That&#39;s weird...</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://blog.bessas.me/categories/index.xml" rel="self" type="application/rss+xml" />
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="https://blog.bessas.me/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
