@@ -9,7 +9,7 @@
     <lastBuildDate>Sat, 26 Oct 2024 08:58:25 +0300</lastBuildDate>
     <atom:link href="https://blog.bessas.me/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Org Babel Kubernetes</title>
+      <title>Evaluating org code blocks in a Kubernetes pod</title>
       <link>https://blog.bessas.me/posts/org-babel-kubernetes/</link>
       <pubDate>Sat, 26 Oct 2024 08:58:25 +0300</pubDate>
       <guid>https://blog.bessas.me/posts/org-babel-kubernetes/</guid>
